@@ -10,4 +10,3 @@ full_game_px = 672x864
 ratio
 
 3 px monitor = 1px game
-

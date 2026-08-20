@@ -1,24 +1,25 @@
 import pygame
-from pygame.locals import *
+from display.menu import menu
+from display.game import game
+from display.setting import setting
+
 
 pygame.init()
+width = 672
+height = 864
 
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Pac-Man")
+etat = menu(screen, width)
 
-WIDTH = 672
-HEIGHT = 864
-clock = pygame.time.Clock()
-running = True
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+etat = "menu"
+while etat != "quit":
+    if etat == "menu":
+        etat = menu(screen, width)
+    elif etat == "game":
+        etat = game(screen)
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    pygame.display.flip()
-
-    clock.tick(60)
-    screen.fill((0,0,0))
-    pygame.display.flip()
+    elif etat == "setting":
+        etat = setting(screen)
 
 pygame.quit()
