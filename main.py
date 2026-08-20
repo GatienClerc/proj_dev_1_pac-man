@@ -3,9 +3,14 @@ from pygame.locals import *
 
 pygame.init()
 
+TILE_SIZE = 24
+WIDTH = 28*TILE_SIZE
+HEIGHT = 36*TILE_SIZE
 
-WIDTH = 672
-HEIGHT = 864
+SCORE = 0*TILE_SIZE
+GAME = 3*TILE_SIZE
+FOOT = 34*TILE_SIZE
+
 clock = pygame.time.Clock()
 running = True
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
