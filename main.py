@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import *
+from display.elements.display_wall import display_board
 
 pygame.init()
 
@@ -22,8 +22,11 @@ while running:
 
     pygame.display.flip()
 
-    clock.tick(60)
     screen.fill((0,0,0))
+    pygame.draw.line(screen, (255,255,255), (0,GAME), (WIDTH, GAME))
+    display_board([0, GAME], TILE_SIZE, screen)
     pygame.display.flip()
+    
+    clock.tick(60)
 
 pygame.quit()
