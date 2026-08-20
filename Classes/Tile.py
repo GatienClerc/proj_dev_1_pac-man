@@ -3,9 +3,9 @@
 # Description:          Parent class for all tiles
 # Author:               Thierry Perroud
 # Creation date:        18.08.2026
-# Modified by:          -
-# Modification date:    -
-# Version:              0.1
+# Modified by:          Thierry Perroud
+# Modification date:    20.08.2026
+# Version:              0.2
 #***********************************************************************************************************************
 ########################################################################################################################
 # Imports                                                                                                              #
@@ -20,7 +20,7 @@ class Tile:
     Parent class for all tiles.
     """
     ### Attributes ###
-    SIZE = 32
+    SIZE = 24
 
     ### Constructor ###
     def __init__(self, pos_x, pos_y):
