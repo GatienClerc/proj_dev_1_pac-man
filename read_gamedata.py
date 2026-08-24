@@ -12,12 +12,12 @@ def read_gamedata(tile_size, game_area):
             count_col = 0
             for char in line.rstrip("\n"):
                 if char == "*":
-                    row.append(Wall(game_area+tile_size*count_row, game_area+tile_size*count_col))
+                    row.append(Wall(tile_size*count_col, game_area+tile_size*count_row))
                 else:
                     #TODO check all posibilities
-                    row.append(Ground(game_area+tile_size*count_row, game_area+tile_size*count_col, False, False))
+                    row.append(Ground(tile_size*count_col, game_area+tile_size*count_row, False, False))
                 count_col += 1
             board.append(row)
-        count_row += 1
+            count_row += 1
 
     return board

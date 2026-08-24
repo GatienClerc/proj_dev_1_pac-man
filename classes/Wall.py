@@ -22,8 +22,14 @@ class Wall(Tile):
     """
     ### Attributes ###
     # TODO: Set the image depending on adjacent walls when building the level
-    image = None
 
     ### Constructor ###
     def __init__(self,pos_x,pos_y):
         super().__init__(pos_x,pos_y)
+        
+        self.image = pygame.image.load("assets/sprites/terrain/wall.png")
+        self.image = pygame.transform.scale(self.image, (24,24))
+    
+    def draw(self, screen):
+        screen.blit(self.image, (self.pos_x, self.pos_y))
+        
