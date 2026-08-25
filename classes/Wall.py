@@ -26,8 +26,9 @@ class Wall(Tile):
     ### Constructor ###
     def __init__(self,pos_x,pos_y,pixel_size):
         super().__init__(pos_x,pos_y,pixel_size)
-        
-        self.image = pygame.image
+
+        self.image = pygame.Surface((pixel_size, pixel_size), pygame.SRCALPHA)
+        self.image.fill((0, 0, 0, 0))
     
     def draw(self, screen):
         screen.blit(self.image, (self.pos_x, self.pos_y))
