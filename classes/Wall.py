@@ -27,8 +27,7 @@ class Wall(Tile):
     def __init__(self,pos_x,pos_y,pixel_size):
         super().__init__(pos_x,pos_y,pixel_size)
         
-        self.image = pygame.image.load("assets/sprites/terrain/wall.png")
-        self.image = pygame.transform.scale_by(self.image, pixel_size)
+        self.image = pygame.image
     
     def draw(self, screen):
         screen.blit(self.image, (self.pos_x, self.pos_y))
