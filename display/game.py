@@ -9,7 +9,7 @@
 #***********************************************************************************************************************
 from classes.Wall import Wall
 
-from read_gamedata import read_gamedata
+from utils.read_gamedata import read_gamedata
 
 def game_screen(screen, game_area, tile_size, pixel_size):
     board = read_gamedata(tile_size, game_area, pixel_size)
