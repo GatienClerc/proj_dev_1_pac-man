@@ -16,15 +16,15 @@ def menu(screen, width):
 
         pygame.draw.rect(screen, (255, 255, 255), btn_play)
         text_play = font.render("Play", True, (0, 0, 0))
-        screen.blit(text_play,(btn_play.x + 50 , btn_play.y + 15))
+        screen.blit(text_play,(btn_play.x + 65, btn_play.y + 15))
 
         pygame.draw.rect(screen, (255, 255, 255), btn_setting)
         text_setting = font.render("Setting", True, (0, 0, 0))
-        screen.blit(text_setting, (btn_setting.x + 15, btn_setting.y + 15))
+        screen.blit(text_setting, (btn_setting.x + 40, btn_setting.y + 15))
 
         pygame.draw.rect(screen, (255, 255, 255), btn_quit)
         text_quit = font.render("Quit", True, (0, 0, 0))
-        screen.blit(text_quit, (btn_quit.x + 35, btn_quit.y + 15))
+        screen.blit(text_quit, (btn_quit.x + 65, btn_quit.y + 15))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -40,6 +40,7 @@ def menu(screen, width):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn_quit.collidepoint(event.pos):
                     return "quit"
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return "quit"
