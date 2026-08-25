@@ -3,15 +3,15 @@
 # Description:          Child tile class for wall tiles
 # Author:               Thierry Perroud
 # Creation date:        18.08.2026
-# Modified by:          -
-# Modification date:    -
-# Version:              0.1
+# Modified by:          Cédric Jankiewicz
+# Modification date:    25.08.2026
+# Version:              0.2
 #***********************************************************************************************************************
 ########################################################################################################################
 # Imports                                                                                                              #
 ########################################################################################################################
 import pygame
-from Tile import Tile
+from classes.Tile import Tile
 
 ########################################################################################################################
 # Class                                                                                                                #
@@ -22,8 +22,14 @@ class Wall(Tile):
     """
     ### Attributes ###
     # TODO: Set the image depending on adjacent walls when building the level
-    image = None
 
     ### Constructor ###
-    def __init__(self,pos_x,pos_y):
-        super().__init__(pos_x,pos_y)
+    def __init__(self,pos_x,pos_y,pixel_size):
+        super().__init__(pos_x,pos_y,pixel_size)
+        
+        self.image = pygame.image.load("assets/sprites/terrain/wall.png")
+        self.image = pygame.transform.scale_by(self.image, pixel_size)
+    
+    def draw(self, screen):
+        screen.blit(self.image, (self.pos_x, self.pos_y))
+        
