@@ -3,7 +3,8 @@ from display.game import game_screen
 
 pygame.init()
 
-TILE_SIZE = 24
+PIXEL_SIZE = 3
+TILE_SIZE = 8*PIXEL_SIZE
 WIDTH = 28*TILE_SIZE
 HEIGHT = 36*TILE_SIZE
 
@@ -23,7 +24,7 @@ while running:
     pygame.display.flip()
 
     screen.fill((0,0,0))
-    game_screen(screen, GAME, TILE_SIZE)
+    game_screen(screen, GAME, TILE_SIZE, PIXEL_SIZE)
     pygame.display.flip()
     
     clock.tick(60)

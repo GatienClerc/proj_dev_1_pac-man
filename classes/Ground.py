@@ -21,8 +21,8 @@ class Ground(Tile):
     Ground tile class
     """
     ### Constructor ###
-    def __init__(self,pos_x,pos_y, has_item = True, item_type = None):
-        super().__init__(pos_x,pos_y)
+    def __init__(self,pos_x,pos_y,pixel_size, has_item = True, item_type = None):
+        super().__init__(pos_x,pos_y,pixel_size)
         self.has_item = has_item
         self.item_type = item_type
 
