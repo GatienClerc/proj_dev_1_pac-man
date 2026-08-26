@@ -102,6 +102,14 @@ add_rotations(
     1, 1, 1
     ),1)
 
+# wall dead end
+add_rotations(
+    (
+    1, 0, 1,
+    1,    1,
+    1, 1, 1
+    ),1)
+
 #outside corner
 add_rotations(
     (
@@ -148,6 +156,14 @@ add_rotations(
     2, 2, 2,
     1,    1,
     0, 0, 1
+    ),3)
+
+#outside wall dead end
+add_rotations(
+    (
+    2, 2, 2,
+    1,    1,
+    1, 0, 1
     ),3)
 
 #outside wall volume
