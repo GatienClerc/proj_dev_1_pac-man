@@ -18,7 +18,11 @@ clock = pygame.time.Clock()
 running = True
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
+font = pygame.font.Font("assets/font/Pacfont.ttf", TILE_SIZE)
+
 board = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
+
+score = "00"
 
 while running:
     for event in pygame.event.get():
@@ -28,7 +32,7 @@ while running:
     pygame.display.flip()
 
     screen.fill((0,0,0))
-    game_screen(screen, board, score)
+    game_screen(screen, board, font, score, TILE_SIZE)
     pygame.display.flip()
     
     clock.tick(60)
