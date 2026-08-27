@@ -3,8 +3,8 @@
 # Description:          Child tile class for ground tiles
 # Author:               Thierry Perroud
 # Creation date:        18.08.2026
-# Modified by:          -
-# Modification date:    -
+# Modified by:          Cedric Jankiewicz
+# Modification date:    27.08.2026
 # Version:              0.1
 #***********************************************************************************************************************
 ########################################################################################################################
@@ -16,42 +16,40 @@ from classes.Tile import Tile
 ########################################################################################################################
 # Class                                                                                                                #
 ########################################################################################################################
+
+#images
+dot = pygame.image.load("assets/sprites/collectables/dot.png")
+power_up = pygame.image.load("assets/sprites/collectables/big_dot.png")
+
 class Ground(Tile):
     """
     Ground tile class
     """
     ### Constructor ###
-    def __init__(self,pos_x,pos_y,pixel_size, has_item = True, item_type = None, is_ghost_area = False):
+    def __init__(self,pos_x, pos_y, pixel_size, item_type = None, is_ghost_area = False):
         super().__init__(pos_x,pos_y,pixel_size)
-        self.has_item = has_item
         self.item_type = item_type
         self.is_ghost_area = is_ghost_area
 
     ### Methods ###
-    def draw_item(self):
+    def draw(self, screen):
         """
-        draw_item draws an item on the ground tile depending on the item type.
+        draw draws an item on the ground tile depending on the item type.
 
         :return:
         """
-        if not self.has_item: return
         if not self.item_type: return
 
         if self.item_type == "Dot":
-            # TODO: Draw a Dot item in the center of the tile
-            pass
+            screen.blit(pygame.transform.scale_by(dot, self.pixel_size), (self.pos_x, self.pos_y))
 
         elif self.item_type == "Power Up":
-            # TODO: Draw a Power Up item in the center of the tile
-            pass
+            screen.blit(pygame.transform.scale_by(power_up, self.pixel_size), (self.pos_x, self.pos_y))
 
     def remove_item(self):
         """
-        undraw_item removes the item on the ground tile when the player goes on the tile.
+        remove_item removes the item on the ground tile
 
         :return:
         """
-        self.has_item = False
         self.item_type = None
-
-        # TODO: Visually remove the item that was collected

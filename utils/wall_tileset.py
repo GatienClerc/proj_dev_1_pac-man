@@ -3,7 +3,12 @@ from classes.Wall import Wall
 from utils.spritesheet import spritesheet
 
 def set_wall_image(board, pixel_size):
-    sprites = spritesheet("assets/sprites/terrain/wall.png", 4, 4, 8, 8, pixel_size)
+    """
+    set_wall_image set the wall images depending of their neighbors
+    :param board: the game board
+    :param pixel_size: the size of 1 pixel
+    """
+    sprites = spritesheet("assets/sprites/terrain/wall.png", 4, 4, 8, 8)
     for i in range (len(board)):
         for j in range (len(board[i])):
             if isinstance(board[i][j], Wall):
@@ -14,7 +19,15 @@ def set_wall_image(board, pixel_size):
                 else:
                     board[i][j].image = pygame.Surface((0, 0), pygame.SRCALPHA)
 
+
 def get_neighbors(board, i, j):
+    """
+    get_neighbors get all the neighbors
+    :param board: the game board
+    :param i: x coordinate
+    :param j: y coordinate
+    :return: a set of neighbors
+    """
     directions = [
         (-1, -1),  # top-left
         (-1,  0),  # top
@@ -51,6 +64,11 @@ def get_neighbors(board, i, j):
 
 
 def rotate_90(rule):
+    """
+    rotate_90 rotate a rule by 90 degrees
+    :param rule: the rule to rotate
+    :return: the rotated rule
+    """
     return (
         rule[2],rule[4],rule[7],
         rule[1],        rule[6],
@@ -59,6 +77,11 @@ def rotate_90(rule):
 
 
 def add_rotations(rule, value):
+    """
+    add_rotations add the 4 rotation to the ruleset
+    :param rule: the rule to rotate
+    :param value: the image from the spritesheet
+    """
     for i in range(4):
         ruleset[rule]=[value,90*i]
         rule = rotate_90(rule)

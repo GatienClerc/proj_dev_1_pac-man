@@ -18,10 +18,9 @@ def game_innit(game_area, tile_size, pixel_size):
     
 
 def game_screen(screen, board):
-    display_wall(screen, board)
+    display_board(screen, board)
 
-def display_wall(screen, board):
+def display_board(screen, board):
     for col in board:
         for tile in col:
-            if isinstance(tile, Wall):
-                tile.draw(screen)
+            tile.draw(screen)
