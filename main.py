@@ -1,3 +1,5 @@
+from tkinter import font
+
 import pygame
 from display.game import game_screen, game_innit
 
@@ -26,7 +28,7 @@ while running:
     pygame.display.flip()
 
     screen.fill((0,0,0))
-    game_screen(screen, board)
+    game_screen(screen, board, score)
     pygame.display.flip()
     
     clock.tick(60)
