@@ -40,6 +40,10 @@ def get_neighbors(board, i, j):
 
             if isinstance(cell, Wall):
                 neighbors.append(1)
+                
+            elif cell.is_ghost_area:
+                neighbors.append(3)
+                
             else:
                 neighbors.append(0)
 
@@ -195,7 +199,7 @@ add_rotations(
     (
     0, 0, 0,
     0,    1,
-    0, 1, 0
+    0, 1, 3
     ),6)
 
 # ghost room wall
@@ -203,7 +207,7 @@ add_rotations(
     (
     0, 0, 0,
     1,    1,
-    0, 0, 0
+    3, 3, 3
     ),7)
 
 # ghost room corner wall L
@@ -211,7 +215,7 @@ add_rotations(
     (
     0, 0, 0,
     1,    1,
-    1, 0, 0
+    1, 3, 3
     ),7)
 
 # ghost room corner wall R
@@ -219,7 +223,7 @@ add_rotations(
     (
     0, 0, 0,
     1,    1,
-    0, 0, 1
+    3, 3, 1
     ),7)
 
 # ghost room end wall L
@@ -227,7 +231,7 @@ add_rotations(
     (
     0, 0, 0,
     1,    0,
-    0, 0, 0
+    3, 3, 3
     ),8)
 
 # ghost room end wall R
@@ -235,5 +239,5 @@ add_rotations(
     (
     0, 0, 0,
     0,    1,
-    0, 0, 0
+    3, 3, 3
     ),9)

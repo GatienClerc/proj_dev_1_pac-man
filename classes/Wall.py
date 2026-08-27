@@ -20,8 +20,6 @@ class Wall(Tile):
     """
     Wall tile class
     """
-    ### Attributes ###
-    # TODO: Set the image depending on adjacent walls when building the level
 
     ### Constructor ###
     def __init__(self,pos_x,pos_y,pixel_size):
