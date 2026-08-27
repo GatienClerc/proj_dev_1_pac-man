@@ -1,6 +1,15 @@
 import pygame
 
-def spritesheet(image_path, rows, cols, width, height, size=1):
+def spritesheet(image_path, rows, cols, width, height):
+    """
+    spritesheet cut a image into a list of smaller images
+    :param image_path: the image path
+    :param rows: number of rows
+    :param cols: number of columns 
+    :param width: the width of one image
+    :param height: the height of one image
+    :return: a list of images 
+    """
     textures = []
     image = pygame.image.load(image_path)
 
@@ -14,7 +23,6 @@ def spritesheet(image_path, rows, cols, width, height, size=1):
                     height
                 )
             )
-            texture = pygame.transform.scale_by(texture, size)
             textures.append(texture)
 
     return textures

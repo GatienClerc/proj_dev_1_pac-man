@@ -11,6 +11,13 @@ from classes.Ground import Ground
 from classes.Wall import Wall
 
 def read_gamedata(tile_size, game_area, pixel_size):
+    """
+    read_gamedata reads the game data from a txt file
+    :param tile_size: the size of a tile 
+    :param game_area: the game area coordinate
+    :param pixel_size: the size of a pixel
+    :return: the gameboard
+    """
     file_path = "gamedata/board.txt"
     board = []
 
@@ -22,8 +29,16 @@ def read_gamedata(tile_size, game_area, pixel_size):
             for char in line.rstrip("\n"):
                 if char == "*":
                     row.append(Wall(tile_size*count_col, game_area+tile_size*count_row, pixel_size))
+                    
                 elif char == "%":
                     row.append(Ground(tile_size * count_col, game_area + tile_size * count_row, pixel_size, is_ghost_area=True))
+                    
+                elif char == "#":
+                    row.append(Ground(tile_size * count_col, game_area + tile_size * count_row, pixel_size, item_type="Power Up"))
+                    
+                elif char == ".":
+                    row.append(Ground(tile_size * count_col, game_area + tile_size * count_row, pixel_size, item_type="Dot"))
+                
                 else:
                     #TODO check all posibilities
                     row.append(Ground(tile_size*count_col, game_area+tile_size*count_row, pixel_size))
