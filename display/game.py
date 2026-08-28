@@ -8,15 +8,19 @@
 # Version:              0.1
 #***********************************************************************************************************************
 from classes.Wall import Wall
-
 from utils.read_gamedata import read_gamedata
+from utils.wall_tileset import set_wall_image
 
-def game_screen(screen, game_area, tile_size, pixel_size):
+def game_innit(game_area, tile_size, pixel_size):
     board = read_gamedata(tile_size, game_area, pixel_size)
-    display_wall(screen, board)
+    set_wall_image(board, pixel_size)
+    return board
+    
 
-def display_wall(screen, board):
+def game_screen(screen, board):
+    display_board(screen, board)
+
+def display_board(screen, board):
     for col in board:
         for tile in col:
-            if isinstance(tile, Wall):
-                tile.draw(screen)
+            tile.draw(screen)
