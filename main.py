@@ -16,7 +16,7 @@ clock = pygame.time.Clock()
 running = True
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-board = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
+board, ghost = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
 
 while running:
     for event in pygame.event.get():
@@ -26,7 +26,7 @@ while running:
     pygame.display.flip()
 
     screen.fill((0,0,0))
-    game_screen(screen, board)
+    game_screen(screen, board, ghost)
     pygame.display.flip()
     
     clock.tick(60)
