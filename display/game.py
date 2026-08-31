@@ -33,4 +33,4 @@ def display_board(screen, board):
 
 def display_ghost(screen, ghost, board):
     ghost.draw(screen)
-    ghost.ai(board)
+    ghost.move(board)
