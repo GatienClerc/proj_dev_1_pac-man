@@ -51,19 +51,38 @@ class Ghost:
         screen.blit(pygame.transform.scale_by(self.sprite, self.pixel_size), (self.pos_x*self.tile_size-offset, self.pos_y*self.tile_size+self.game_area-offset))
   
     
-    def move(self, x_lenght):
-        self.pos_x = self.pos_x+directions[self.direction][0]%
-        self.pos_y += directions[self.direction][1]
+    def move(self):
+        self.pos_x = (self.pos_x+directions[self.direction][0])
+        self.pos_y = (self.pos_y+directions[self.direction][1])
+        
+        #wrap
+        if self.pos_x >= 27:
+            self.pos_x = 0
+            
+        elif self.pos_x <= 0:
+            self.pos_x = 27
+
+        if self.pos_y >= 30:
+            self.pos_y = 0
+
+        elif self.pos_y <= 0:
+            self.pos_y = 30
 
 
     def check_path(self, board):
-        #       n  e  s  w
         path = [0, 0, 0, 0]
-        
-        for i in range(len(directions)):
-            if not isinstance(board[self.pos_y+directions[i][1]][self.pos_x+directions[i][0]], Wall):
-                path[i] = 1
-        
+
+        height = len(board)
+        width = len(board[0])
+
+        for i, (dx, dy) in enumerate(directions):
+            x = (self.pos_x + dx) % width
+            y = self.pos_y + dy
+
+            if 0 <= y < height:
+                if not isinstance(board[y][x], Wall):
+                    path[i] = 1
+
         return path
     
     
