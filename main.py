@@ -21,26 +21,15 @@ pygame.display.set_caption("Pac-Man")
 etat = menu(screen, WIDTH)
 
 etat = "menu"
+
 while etat != "quit":
     if etat == "menu":
         etat = menu(screen, WIDTH)
     elif etat == "game":
-        etat = game(screen)
+        board = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
+        etat = game(screen, board)
     elif etat == "setting":
         etat = setting(screen)
+pygame.quit()
 
 board = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
-
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    pygame.display.flip()
-
-    screen.fill((0,0,0))
-    game_screen(screen, board)
-    pygame.display.flip()
-    clock.tick(60)
-
-pygame.quit()
