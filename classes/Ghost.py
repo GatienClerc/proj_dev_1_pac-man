@@ -3,9 +3,9 @@
 # Description:          Class for Pac-Man ghosts
 # Author:               Gatien Clerc
 # Creation date:        25.08.2026
-# Modified by:          -
-# Modification date:    -
-# Version:              0.1
+# Modified by:          Cédric Jankiewicz
+# Modification date:    01.09.2026
+# Version:              0.3
 #***********************************************************************************************************************
 ########################################################################################################################
 # Imports                                                                                                              #
@@ -30,7 +30,7 @@ directions = [
 # Class                                                                                                                #
 ########################################################################################################################
 class Ghost:
-    def __init__(self, pos_x, pos_y, pixel_size=1, tile_size=8, game_area=24):
+    def __init__(self, pos_x, pos_y, pixel_size=1, tile_size=8, game_area=24, color=(255,0,0)):
 
         # Tile position
         self.grid_x = pos_x
@@ -53,7 +53,7 @@ class Ghost:
         self.animation_delay = 10
         self.animation_delay_count = 0
         
-        self.color = (255,0,0) #red by default
+        self.color = color
         
         self.body = spritesheet("assets/sprites/ghost/ghost_body.png", 2, 1, 14, 14)
         for i in range(len(self.body)):
