@@ -1,7 +1,5 @@
 import pygame
-from display.menu import menu
-from display.setting import setting
-from display.game import game_screen, game_innit, game
+from display.game import game_screen, game_innit
 
 pygame.init()
 
@@ -20,7 +18,14 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pac-Man")
 etat = menu(screen, WIDTH)
 
-etat = "menu"
+font = pygame.font.Font("assets/font/Pacfont.ttf", TILE_SIZE)
+
+board = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
+
+score = "00"
+
+
+etat = "menu"(screen, WIDTH)
 
 while etat != "quit":
     if etat == "menu":
@@ -31,5 +36,3 @@ while etat != "quit":
     elif etat == "setting":
         etat = setting(screen)
 pygame.quit()
-
-board = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
