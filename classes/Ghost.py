@@ -45,7 +45,7 @@ class Ghost:
         self.game_area = game_area
         
         self.direction = 1
-        self.speed = 2
+        self.speed = tile_size/16
         self.is_alive = True
         
         # visuals
