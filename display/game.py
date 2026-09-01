@@ -16,8 +16,7 @@ from utils.wall_tileset import set_wall_image
 def game_innit(game_area, tile_size, pixel_size):
     board = read_gamedata(tile_size, game_area, pixel_size)
     set_wall_image(board, pixel_size)
-    img = pygame.image.load("assets/sprites/ghost/ghost.png")
-    ghost = Ghost(1, 5, pixel_size, tile_size, game_area, img)
+    ghost = Ghost(1, 5, pixel_size, tile_size, game_area)
     return board, ghost
     
 

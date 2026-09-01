@@ -13,6 +13,8 @@
 import pygame
 import random
 from classes.Wall import Wall
+from utils.spritesheet import spritesheet
+from utils.color_swap import color_swap
 
 ########################################################################################################################
 # Variable                                                                                                             #
@@ -28,7 +30,7 @@ directions = [
 # Class                                                                                                                #
 ########################################################################################################################
 class Ghost:
-    def __init__(self, pos_x, pos_y, pixel_size=1, tile_size=8, game_area=24, sprite=None):
+    def __init__(self, pos_x, pos_y, pixel_size=1, tile_size=8, game_area=24):
 
         # Tile position
         self.grid_x = pos_x
@@ -41,11 +43,23 @@ class Ghost:
         self.pixel_size = pixel_size
         self.tile_size = tile_size
         self.game_area = game_area
-        self.sprite = sprite
-
+        
         self.direction = 1
         self.speed = 2
         self.is_alive = True
+        
+        # visuals
+        self.animation_frame = 0
+        self.animation_delay = 10
+        self.animation_delay_count = 0
+        
+        self.color = (255,0,0) #red by default
+        
+        self.body = spritesheet("assets/sprites/ghost/ghost_body.png", 2, 1, 14, 14)
+        for i in range(len(self.body)):
+            self.body[i] = color_swap(self.body[i], (255,0,0), self.color)
+            
+        self.eyes = spritesheet("assets/sprites/ghost/ghost_eye.png", 2, 2, 14, 14)
 
 
     def draw(self, screen):
@@ -55,14 +69,25 @@ class Ghost:
         offset = 3 * self.pixel_size
 
         screen.blit(
-            pygame.transform.scale_by(self.sprite, self.pixel_size),
+            pygame.transform.scale_by(self.body[self.animation_frame], self.pixel_size),
             (
                 self.x - offset,
                 self.y + self.game_area - offset
             )
         )
+        screen.blit(
+            pygame.transform.scale_by(self.eyes[self.direction], self.pixel_size),
+            (
+                self.x - offset,
+                self.y + self.game_area - offset
+            )
+        )
+        self.animation_delay_count += 1
+        if self.animation_delay_count >= self.animation_delay:
+            self.animation_delay_count = 0
+            self.animation_frame = (self.animation_frame+1)%2
 
-    ### Move ###
+
     def move(self, board):
         """
         move smoothly and check for direction when in the center of a tile
@@ -125,7 +150,7 @@ class Ghost:
 
     def ai(self, board):
         """
-        choice the path it'll take (brain)
+        choice of the path it'll take (brain)
         """
 
         path = self.check_path(board)
