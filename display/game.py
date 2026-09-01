@@ -12,13 +12,13 @@ from classes.Wall import Wall
 from utils.read_gamedata import read_gamedata
 from utils.wall_tileset import set_wall_image
 
-def game(screen, board):
+def game(screen, board, font ,score, tile_size):
     clock = pygame.time.Clock()
 
     while True:
         screen.fill((0, 0, 0))
 
-        game_screen(screen, board)
+        game_screen(screen, board, font ,score, tile_size)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,10 +43,12 @@ def game_screen(screen, board, font ,score, tile_size):
     draw_score(screen, font, score, tile_size)
     display_board(screen, board)
 
+
 def display_board(screen, board):
     for col in board:
         for tile in col:
             tile.draw(screen)
+
 
 def display_wall(screen, board):
     for col in board:

@@ -2,9 +2,8 @@ import pygame
 
 pygame.init()
 
-def menu(screen, width):
+def menu(screen, width, font):
     clock = pygame.time.Clock()
-    font = pygame.font.Font(None, 50)
 
     btn_play = pygame.Rect(width- width/2 - 100, 250, 200, 60)
     btn_setting = pygame.Rect(width - width / 2 - 100, 350, 200, 60)
@@ -16,15 +15,15 @@ def menu(screen, width):
 
         pygame.draw.rect(screen, (255, 255, 255), btn_play)
         text_play = font.render("Play", True, (0, 0, 0))
-        screen.blit(text_play,(btn_play.x + 65, btn_play.y + 15))
+        screen.blit(text_play, text_play.get_rect(center=btn_play.center))
 
         pygame.draw.rect(screen, (255, 255, 255), btn_setting)
         text_setting = font.render("Setting", True, (0, 0, 0))
-        screen.blit(text_setting, (btn_setting.x + 40, btn_setting.y + 15))
+        screen.blit(text_setting, text_setting.get_rect(center=btn_setting.center))
 
         pygame.draw.rect(screen, (255, 255, 255), btn_quit)
         text_quit = font.render("Quit", True, (0, 0, 0))
-        screen.blit(text_quit, (btn_quit.x + 65, btn_quit.y + 15))
+        screen.blit(text_quit, text_quit.get_rect(center=btn_quit.center))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
