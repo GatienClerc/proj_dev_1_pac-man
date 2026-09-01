@@ -44,7 +44,7 @@ class Ghost:
         self.sprite = sprite
 
         self.direction = 1
-        self.speed = 2  # pixels per frame
+        self.speed = 2
         self.is_alive = True
 
 
@@ -125,7 +125,7 @@ class Ghost:
 
     def ai(self, board):
         """
-        choice le path it'll take (brain)
+        choice the path it'll take (brain)
         """
 
         path = self.check_path(board)
