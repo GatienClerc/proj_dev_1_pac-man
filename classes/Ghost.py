@@ -34,7 +34,7 @@ class Ghost:
         self.grid_x = pos_x
         self.grid_y = pos_y
 
-        # Pixel position (float for smooth movement)
+        # Pixel position
         self.x = pos_x * tile_size
         self.y = pos_y * tile_size
 
@@ -49,6 +49,9 @@ class Ghost:
 
 
     def draw(self, screen):
+        """
+        draw itself
+        """
         offset = 3 * self.pixel_size
 
         screen.blit(
@@ -61,6 +64,9 @@ class Ghost:
 
     ### Move ###
     def move(self, board):
+        """
+        move smoothly and check for direction when in the center of a tile
+        """
 
         dx, dy = directions[self.direction]
 
@@ -95,6 +101,9 @@ class Ghost:
 
 
     def check_path(self, board):
+        """
+        get all possible path from the object position
+        """
 
         path = [0, 0, 0, 0]
 
@@ -115,6 +124,9 @@ class Ghost:
 
 
     def ai(self, board):
+        """
+        choice le path it'll take (brain)
+        """
 
         path = self.check_path(board)
 
