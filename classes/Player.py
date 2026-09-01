@@ -17,33 +17,54 @@ import pygame
 ########################################################################################################################
 class Player:
     ### Attributes ###
-    sprite = None
+    # TODO: Set new player sprite when player is moving
+    SIZE = 12
+    direction = None
+    buffered_direction = None
 
     ### Constructor ###
-    def __init__(self, pos_x,pos_y):
+    def __init__(self, pos_x,pos_y, pixel_size):
         self.pos_x = pos_x
         self.pos_y = pos_y
 
+        self.sprite = pygame.image.load("assets/sprites/player/pacman.png")
+        self.sprite = pygame.transform.scale_by(self.sprite, pixel_size)
+
 
     ### Methods ###
-    def move(self, direction):
+    def draw(self, screen):
+        screen.blit(self.sprite, (self.pos_x, self.pos_y))
+
+    def move(self, screen, one_pixel, one_tile, max_x, min_y, max_y):
         """
         Moves the player to the specified direction.
 
-        :param direction: Can be "up", "down", "left" or "right
+        :param screen: The game window
+        :param one_pixel: The size of one pixel
+        :param one_tile: The size of one tile
+        :param max_x: The end of the game window horizontally
+        :param min_y: The start of the game area within the game window vertically
+        :param max_y: The end of the game area within the game window horizontally
         :return:
         """
-        if direction == "up":
-            self.pos_y -= 0.5
+        if not self.direction:
+            if self.buffered_direction:
+                self.direction = self.buffered_direction
+                self.buffered_direction = None
 
-        elif direction == "down":
-            self.pos_y += 0.5
+            else: return
 
-        elif direction == "left":
-            self.pos_x -= 0.5
+        elif self.direction == "up": self.pos_y -= one_pixel
+        elif self.direction == "left": self.pos_x -= one_pixel
+        elif self.direction == "down": self.pos_y += one_pixel
+        elif self.direction == "right": self.pos_x += one_pixel
 
-        elif direction == "right":
-            self.pos_x += 0.5
+        if self.pos_y + self.SIZE * one_pixel <= min_y: self.pos_y += (max_y - min_y) + one_tile
+        elif self.pos_x + self.SIZE * one_pixel <= 0: self.pos_x += max_x + one_tile
+        elif self.pos_y >= max_y: self.pos_y -= (max_y - min_y) + self.SIZE * one_pixel
+        elif self.pos_x >= max_x: self.pos_x -= max_x + self.SIZE * one_pixel
+
+        self.draw(screen)
 
 
     def set_sprite(self, new_sprite):
