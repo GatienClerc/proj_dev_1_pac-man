@@ -48,6 +48,7 @@ class Ghost:
         self.speed = tile_size/16
         self.is_alive = True
         
+        # scatter, chase, scared, dead, go_outside
         self.state = "scatter"
         self.scatter_target = [0, 0]
         self.target = [0, 0]
@@ -151,6 +152,7 @@ class Ghost:
 
         return path
 
+
     def get_direction(self, paths):
         min_distance = float("inf")
         best_path = None
@@ -172,7 +174,6 @@ class Ghost:
 
         return best_path
         
-
 
     def ai(self, board):
         """

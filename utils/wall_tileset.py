@@ -11,13 +11,16 @@ def set_wall_image(board, pixel_size):
     sprites = spritesheet("assets/sprites/terrain/wall.png", 4, 4, 8, 8)
     for i in range (len(board)):
         for j in range (len(board[i])):
-            if isinstance(board[i][j], Wall):
+            if isinstance(board[i][j], Wall) and not board[i][j].is_gate:
                 neighbors = get_neighbors(board, i, j)
                 image = ruleset.get(tuple(neighbors), [-1, 0])
                 if image[0] != -1:
                     board[i][j].image = pygame.transform.rotate(sprites[image[0]], image[1])
                 else:
                     board[i][j].image = pygame.Surface((0, 0), pygame.SRCALPHA)
+            
+            elif isinstance(board[i][j], Wall) and board[i][j].is_gate:
+                board[i][j].image = pygame.image.load("assets/sprites/terrain/ghost_gate.png")
 
 
 def get_neighbors(board, i, j):
