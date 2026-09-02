@@ -11,7 +11,7 @@
 # Imports                                                                                                              #
 ########################################################################################################################
 import pygame
-import random
+import math
 from classes.Wall import Wall
 from utils.spritesheet import spritesheet
 from utils.color_swap import color_swap
@@ -47,6 +47,10 @@ class Ghost:
         self.direction = 1
         self.speed = tile_size/16
         self.is_alive = True
+        
+        self.state = "scatter"
+        self.scatter_target = [0, 0]
+        self.target = [0, 0]
         
         # visuals
         self.animation_frame = 0
@@ -147,6 +151,28 @@ class Ghost:
 
         return path
 
+    def get_direction(self, paths):
+        min_distance = float("inf")
+        best_path = None
+
+        for path in paths:
+            point_1 = [
+                self.grid_x + directions[path][0],
+                self.grid_y + directions[path][1]
+            ]
+
+            distance = math.sqrt(
+                (self.target[0] - point_1[0]) ** 2 +
+                (self.target[1] - point_1[1]) ** 2
+            )
+
+            if distance < min_distance:
+                min_distance = distance
+                best_path = path
+
+        return best_path
+        
+
 
     def ai(self, board):
         """
@@ -166,4 +192,4 @@ class Ghost:
         if not options:
             self.direction = (self.direction + 2) % 4
         else:
-            self.direction = random.choice(options)
+            self.direction = self.get_direction(options)
