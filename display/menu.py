@@ -2,12 +2,19 @@ import pygame
 
 pygame.init()
 
-def menu(screen, width, font):
+def menu(screen, width, height, font):
     clock = pygame.time.Clock()
 
-    btn_play = pygame.Rect(width- width/2 - 100, 250, 200, 60)
-    btn_setting = pygame.Rect(width - width / 2 - 100, 350, 200, 60)
-    btn_quit = pygame.Rect(width - width / 2 - 100, 450, 200, 60)
+    btn_width = width // 3
+    btn_height = height // 12
+
+    btn_x = (width - btn_width) // 2
+
+    spacing = height // 8
+
+    btn_play = pygame.Rect(btn_x, height // 2 - spacing, btn_width, btn_height)
+    btn_setting = pygame.Rect(btn_x, height // 2, btn_width, btn_height)
+    btn_quit = pygame.Rect(btn_x, height // 2 + spacing, btn_width, btn_height)
 
     running = True
     while running:

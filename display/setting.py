@@ -1,20 +1,28 @@
 import pygame
 
-def setting(screen, width, height, font):
+def setting(screen, width, height, font, pixel_size, volume):
 
     clock = pygame.time.Clock()
 
     volume = 70
-    pixel_size = 3
     dragging = False
 
-    slider_x = width // 2 - 150
-    slider_y = 180
-    slider_width = 300
+    title_y = height // 8
 
-    btn_minus = pygame.Rect(width // 2 - 100, 300, 50, 50)
-    btn_plus = pygame.Rect(width // 2 + 50, 300, 50, 50)
-    btn_back = pygame.Rect(width // 2 - 100, 450, 200, 60)
+    slider_width = width // 2
+    slider_x = (width - slider_width) // 2
+    slider_y = height // 4
+
+    btn_size = height // 12
+
+    btn_minus = pygame.Rect(width // 2 - btn_size * 2, height // 2, btn_size, btn_size)
+
+    btn_plus = pygame.Rect( width // 2 + btn_size, height // 2, btn_size, btn_size)
+
+    btn_apply_width = width // 3
+    btn_apply_height = height // 12
+
+    btn_apply = pygame.Rect((width - btn_apply_width) // 2, height * 3 // 4, btn_apply_width, btn_apply_height)
 
     while True:
 
@@ -22,30 +30,22 @@ def setting(screen, width, height, font):
 
         # Titre
         title = font.render("SETTINGS", True, (255, 255, 255))
-        screen.blit(title, title.get_rect(center=(width // 2, 80)))
+        screen.blit(title, title.get_rect(center=(width // 2, title_y)))
 
         # Volume
         volume_text = font.render(f"Volume : {int(volume)}%", True, (255, 255, 255))
-        screen.blit(volume_text, (slider_x, 130))
+        screen.blit(volume_text, (slider_x, slider_y - btn_size))
 
-        pygame.draw.rect(
-            screen,
-            (255, 255, 255),
-            (slider_x, slider_y, slider_width, 10)
-        )
+
+        pygame.draw.rect(screen,(255, 255, 255),(slider_x, slider_y, slider_width, btn_size // 5))
 
         handle_x = slider_x + (volume / 100) * slider_width
 
-        pygame.draw.circle(
-            screen,
-            (255, 255, 0),
-            (int(handle_x), slider_y + 5),
-            12
-        )
+        pygame.draw.circle( screen,(255, 255, 0),(int(handle_x), slider_y + btn_size // 10),btn_size // 4)
 
         # Pixel Size
         pixel_label = font.render("Pixel Size :", True, (255, 255, 255))
-        screen.blit(pixel_label, (width // 2 - 120, 250))
+        screen.blit(pixel_label,(width // 2 - pixel_label.get_width() // 2, height // 2 - btn_size))
 
         pygame.draw.rect(screen, (255, 255, 255), btn_minus)
         pygame.draw.rect(screen, (255, 255, 255), btn_plus)
@@ -57,13 +57,13 @@ def setting(screen, width, height, font):
         screen.blit(plus_text, plus_text.get_rect(center=btn_plus.center))
 
         size_text = font.render(f"{pixel_size}x", True, (255, 255, 255))
-        screen.blit(size_text, size_text.get_rect(center=(width // 2, 325)))
+        screen.blit(size_text, size_text.get_rect(center=(width // 2, height // 2 + btn_size // 2)))
 
-        # Back
-        pygame.draw.rect(screen, (255, 255, 255), btn_back)
+        # apply
+        pygame.draw.rect(screen, (255, 255, 255), btn_apply)
 
-        back_text = font.render("BACK", True, (0, 0, 0))
-        screen.blit(back_text, back_text.get_rect(center=btn_back.center))
+        apply_text = font.render("APPLY", True, (0, 0, 0))
+        screen.blit(apply_text, apply_text.get_rect(center=btn_apply.center))
 
         # Événements
         for event in pygame.event.get():
@@ -73,12 +73,12 @@ def setting(screen, width, height, font):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    return "menu"
+                    return "menu", pixel_size
 
             if event.type == pygame.MOUSEBUTTONDOWN:
 
-                if btn_back.collidepoint(event.pos):
-                    return "menu"
+                if btn_apply.collidepoint(event.pos):
+                    return "menu", pixel_size
 
                 if btn_minus.collidepoint(event.pos):
                     pixel_size = max(1, pixel_size - 1)
