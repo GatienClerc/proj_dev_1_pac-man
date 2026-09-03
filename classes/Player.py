@@ -48,7 +48,7 @@ class Player:
         self.game_area = game_area
         self.direction = None
         self.buffered_direction = None
-        self.speed = tile_size / 16
+        self.speed = pixel_size
         self.is_alive = True
         
         self.body = pygame.image.load("assets/sprites/player/pacman.png")
