@@ -30,7 +30,7 @@ def read_gamedata(tile_size, game_area, pixel_size):
             count_col = 0
             for char in line.rstrip("\n"):
                 if char == "*":
-                    row.append(Wall(tile_size*count_col, game_area+tile_size*count_row, pixel_size))
+                    row.append(Wall(tile_size * count_col, game_area + tile_size * count_row, pixel_size))
                     
                 elif char == "%":
                     row.append(Ground(tile_size * count_col, game_area + tile_size * count_row, pixel_size, is_ghost_area=True))
@@ -40,9 +40,12 @@ def read_gamedata(tile_size, game_area, pixel_size):
                     
                 elif char == ".":
                     row.append(Ground(tile_size * count_col, game_area + tile_size * count_row, pixel_size, item_type="Dot"))
-                
-                if char == "p":
+
+                elif char == "p":
                     player = Player(count_col, count_row, pixel_size, tile_size, game_area)
+                    row.append(Ground(tile_size * count_col,
+                                      game_area + tile_size * count_row,
+                                      pixel_size))
                 
                 else:
                     row.append(Ground(tile_size*count_col, game_area+tile_size*count_row, pixel_size))
