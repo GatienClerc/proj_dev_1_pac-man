@@ -93,14 +93,14 @@ class Player:
         """Wrap the ghost around the edges of the board."""
 
         width = (len(board[0])-1) * self.tile_size
-        height = len(board) * self.tile_size
+        height = (len(board)-1) * self.tile_size
 
         if self.x >= width:
             self.x = 0
         elif self.x < 0:
             self.x = (len(board[0]) - 1) * self.tile_size
 
-        if self.y >= height-1:
+        if self.y >= height:
             self.y = 0
         elif self.y < 0:
             self.y = (len(board) - 1) * self.tile_size
@@ -108,7 +108,6 @@ class Player:
     def check_new_direction(self, board):
         if self.buffered_direction is not None:
             dx, dy = DIRECTIONS[self.buffered_direction]
-            print(self.grid_x + dx, self.grid_y + dy)
             if not isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
                 self.direction = self.buffered_direction
                 self.buffered_direction = None
