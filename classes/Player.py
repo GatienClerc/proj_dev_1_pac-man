@@ -11,80 +11,105 @@
 # Imports                                                                                                              #
 ########################################################################################################################
 import pygame
+from classes.Wall import Wall
 
+########################################################################################################################
+# Constants
+########################################################################################################################
+
+# Directions:
+# 0 = North
+# 1 = East
+# 2 = South
+# 3 = West
+DIRECTIONS = (
+    (0, 1),
+    (1, 0),
+    (0, -1),
+    (-1, 0),
+)
 ########################################################################################################################
 # Class                                                                                                                #
 ########################################################################################################################
 class Player:
-    ### Attributes ###
-    # TODO: Set new player sprite when player is moving
-    SIZE = 12
-    direction = None
-    buffered_direction = None
-
     ### Constructor ###
-    def __init__(self, pos_x,pos_y, pixel_size):
-        self.pos_x = pos_x
-        self.pos_y = pos_y
+    def __init__(self, pos_x,pos_y, pixel_size, tile_size, game_area):
+        # Tile position
+        self.grid_x = pos_x
+        self.grid_y = pos_y
 
-        self.sprite = pygame.image.load("assets/sprites/player/pacman.png")
-        self.sprite = pygame.transform.scale_by(self.sprite, pixel_size)
+        # Pixel position
+        self.x = pos_x * tile_size
+        self.y = pos_y * tile_size
+
+        # Movement
+        self.pixel_size = pixel_size
+        self.tile_size = tile_size
+        self.game_area = game_area
+        self.direction = None
+        self.buffered_direction = None
+        self.speed = tile_size / 16
+        self.is_alive = True
+        
+        self.body = pygame.image.load("assets/sprites/player/pacman.png")
 
 
     ### Methods ###
     def draw(self, screen):
-        screen.blit(self.sprite, (self.pos_x, self.pos_y))
+        offset = 3 * self.pixel_size
 
-    def move(self, screen, one_pixel, one_tile, max_x, min_y, max_y):
-        """
-        Moves the player to the specified direction.
+        draw_position = (
+            self.x - offset,
+            self.y + self.game_area - offset,
+        )
 
-        :param screen: The game window
-        :param one_pixel: The size of one pixel
-        :param one_tile: The size of one tile
-        :param max_x: The end of the game window horizontally
-        :param min_y: The start of the game area within the game window vertically
-        :param max_y: The end of the game area within the game window horizontally
-        :return:
-        """
-        if not self.direction:
-            if self.buffered_direction:
+        # Draw body unless the ghost is dead
+        body = pygame.transform.scale_by(
+            self.body,
+            self.pixel_size,
+        )
+        screen.blit(body, draw_position)
+
+    def move(self, board):
+        if self.direction is not None:
+            dx, dy = DIRECTIONS[self.direction]
+
+            self.x += dx * self.speed
+            self.y += dy * self.speed
+
+            self.wrap_position(board)
+
+            # Change direction only when centered on a tile
+            if self.x % self.tile_size == 0 and self.y % self.tile_size == 0:
+                self.grid_x = int(self.x / self.tile_size)
+                self.grid_y = int(self.y / self.tile_size)
+                
+                self.check_direction(board)
+
+    def wrap_position(self, board):
+        """Wrap the ghost around the edges of the board."""
+
+        width = len(board[0]) * self.tile_size
+        height = len(board) * self.tile_size
+
+        if self.x >= width:
+            self.x = 0
+        elif self.x < 0:
+            self.x = (len(board[0]) - 1) * self.tile_size
+
+        if self.y >= height:
+            self.y = 0
+        elif self.y < 0:
+            self.y = (len(board) - 1) * self.tile_size
+
+    def check_new_direction(self, board):
+        if self.buffered_direction is not None:
+            dx, dy = DIRECTIONS[self.buffered_direction]
+            if not isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
                 self.direction = self.buffered_direction
                 self.buffered_direction = None
-
-            else: return
-
-        elif self.direction == "up": self.pos_y -= one_pixel
-        elif self.direction == "left": self.pos_x -= one_pixel
-        elif self.direction == "down": self.pos_y += one_pixel
-        elif self.direction == "right": self.pos_x += one_pixel
-
-        if self.pos_y + self.SIZE * one_pixel <= min_y: self.pos_y += (max_y - min_y) + one_tile
-        elif self.pos_x + self.SIZE * one_pixel <= 0: self.pos_x += max_x + one_tile
-        elif self.pos_y >= max_y: self.pos_y -= (max_y - min_y) + self.SIZE * one_pixel
-        elif self.pos_x >= max_x: self.pos_x -= max_x + self.SIZE * one_pixel
-
-        self.draw(screen)
-
-
-    def set_sprite(self, new_sprite):
-        """
-        Sets a new sprite to the Player object when the player is moving.
-
-        :param new_sprite: The new sprite of the Player object
-        :return:
-        """
-        # TODO: Set new player sprite when player is moving
-        pass
-
-
-    def set_position(self, pos_x, pos_y):
-        """
-        Teleports player into a new position on the game board.
-
-        :param pos_x: new horizontal position of the player
-        :param pos_y: new vertical position of the player
-        :return:
-        """
-        self.pos_x = pos_x
-        self.pos_y = pos_y
+    
+    def check_direction(self, board):
+        dx, dy = DIRECTIONS[self.direction]
+        if isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
+            self.direction = None

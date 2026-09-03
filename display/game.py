@@ -13,12 +13,13 @@ from utils.read_gamedata import read_gamedata
 
 def game_innit(game_area, tile_size, pixel_size):
     board, player = read_gamedata(tile_size, game_area, pixel_size)
+    player.buffered_direction=3
     return board, player
 
 
 def display_elements(screen, board, player):
     display_wall(screen, board)
-    display_player(screen, player)
+    display_player(screen, player, board)
 
 
 def display_wall(screen, board):
@@ -27,5 +28,6 @@ def display_wall(screen, board):
             if isinstance(tile, Wall):
                 tile.draw(screen)
 
-def display_player(screen, player):
+def display_player(screen, player, board):
+    player.move(board)
     player.draw(screen)

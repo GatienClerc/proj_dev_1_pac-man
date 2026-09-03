@@ -14,7 +14,7 @@ from classes.Player import Player
 def read_gamedata(tile_size, game_area, pixel_size):
     file_path = "gamedata/board.txt"
     board = []
-    player = Player(0, 0, pixel_size)
+    player = None
 
     with open(file_path, "r") as f:
         count_row = 0
@@ -28,7 +28,7 @@ def read_gamedata(tile_size, game_area, pixel_size):
                     #TODO check all posibilities
                     row.append(Ground(tile_size*count_col, game_area+tile_size*count_row, pixel_size, False, False))
                     if char == "p":
-                        player.set_position(tile_size*count_col, game_area+tile_size*count_row)
+                        player = Player(count_col+0.5, count_row, pixel_size, tile_size, game_area)
                 count_col += 1
             board.append(row)
             count_row += 1
