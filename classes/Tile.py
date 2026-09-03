@@ -26,4 +26,5 @@ class Tile:
     def __init__(self, pos_x, pos_y, pixel_size):
         self.pos_x = pos_x
         self.pos_y = pos_y
+        self.pixel_size = pixel_size
 

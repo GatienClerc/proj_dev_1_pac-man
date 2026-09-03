@@ -1,5 +1,6 @@
 import pygame
-from display.game import game_innit, display_elements
+from display.game import game_screen, game_innit
+
 pygame.init()
 
 PIXEL_SIZE = 3
@@ -34,8 +35,8 @@ while running:
 
     pygame.display.flip()
 
-    screen.fill((0, 0, 0))
-    display_elements(screen, board, player)
+    screen.fill((0,0,0))
+    game_screen(screen, board, player)
     pygame.display.flip()
 
     clock.tick(60)
