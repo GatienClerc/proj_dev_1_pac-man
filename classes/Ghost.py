@@ -10,6 +10,7 @@
 ########################################################################################################################
 # Imports                                                                                                              #
 ########################################################################################################################
+import random
 import pygame
 import math
 from classes.Wall import Wall
@@ -48,8 +49,8 @@ class Ghost:
         self.speed = tile_size/16
         self.is_alive = True
         
-        # scatter, chase, scared, dead, go_outside
-        self.state = "scatter"
+        # scatter, chase, scared, dead, go_in, go_out
+        self.state = "get_out"
         self.scatter_target = [0, 0]
         self.target = [0, 0]
         
@@ -73,20 +74,22 @@ class Ghost:
         """
         offset = 3 * self.pixel_size
 
-        screen.blit(
-            pygame.transform.scale_by(self.body[self.animation_frame], self.pixel_size),
-            (
-                self.x - offset,
-                self.y + self.game_area - offset
+        if self.state != "dead":
+            screen.blit(
+                pygame.transform.scale_by(self.body[self.animation_frame], self.pixel_size),
+                (
+                    self.x - offset,
+                    self.y + self.game_area - offset
+                )
             )
-        )
-        screen.blit(
-            pygame.transform.scale_by(self.eyes[self.direction], self.pixel_size),
-            (
-                self.x - offset,
-                self.y + self.game_area - offset
+        if self.state != "scared":
+            screen.blit(
+                pygame.transform.scale_by(self.eyes[self.direction], self.pixel_size),
+                (
+                    self.x - offset,
+                    self.y + self.game_area - offset
+                )
             )
-        )
         self.animation_delay_count += 1
         if self.animation_delay_count >= self.animation_delay:
             self.animation_delay_count = 0
@@ -149,6 +152,9 @@ class Ghost:
 
                 if not isinstance(board[y][x], Wall):
                     path[i] = 1
+                elif isinstance(board[y][x], Wall) and board[y][x].is_gate and self.state in ("get_out", "get_in"):
+                    path[i] = 1
+                    
 
         return path
 
@@ -173,18 +179,19 @@ class Ghost:
                 best_path = path
 
         return best_path
+    
+    
+    def chase(self):
+        return [0, 0]
         
 
     def ai(self, board):
         """
         choice of the path it'll take (brain)
         """
-
         path = self.check_path(board)
 
         options = []
-
-        # Don't reverse unless it's the only choice
         for i in range(4):
 
             if i != (self.direction + 2) % 4 and path[i]:
@@ -193,4 +200,29 @@ class Ghost:
         if not options:
             self.direction = (self.direction + 2) % 4
         else:
-            self.direction = self.get_direction(options)
+            if self.state != "scared":
+                if self.state == "scatter":
+                    self.target = self.scatter_target
+                    
+                elif self.state == "chase":
+                    self.target = self.chase()
+                    
+                elif self.state == "dead":
+                    self.target = [14, 11]
+                    if self.grid_x == 14 and self.grid_y == 11:
+                        self.state = "get_in"
+
+                if self.state == "get_in":
+                    self.target = [14, 14]
+                    if self.grid_y >= 14:
+                        self.state = "get_out"
+
+                elif self.state == "get_out":
+                    print(self.color, self.grid_x, self.grid_y, options)
+                    self.target = [14, 11]
+                    if self.grid_y <= 11:
+                        self.state = "scatter"
+                        
+                self.direction = self.get_direction(options)
+            else:
+                self.direction = random.choice(options)

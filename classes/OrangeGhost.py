@@ -15,3 +15,4 @@ from classes.Ghost import Ghost
 class OrangeGhost(Ghost):
     def __init__(self, pos_x, pos_y, pixel_size=1, tile_size=8, game_area=24):
         super().__init__(pos_x, pos_y, pixel_size, tile_size, game_area, color=(255, 184, 82))
+        self.scatter_target = [1, 29]
