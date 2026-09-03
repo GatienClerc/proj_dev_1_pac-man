@@ -47,8 +47,8 @@ GET_IN = "get_in"
 GET_OUT = "get_out"
 
 # Ghost house positions
-GHOST_HOME_IN = (14, 11)
-GHOST_HOUSE_OUT = (14, 14)
+GHOST_HOME_IN = (13, 11)
+GHOST_HOUSE_OUT = (13, 14)
 
 
 ########################################################################################################################
