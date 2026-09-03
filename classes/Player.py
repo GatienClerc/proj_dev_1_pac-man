@@ -39,7 +39,7 @@ class Player:
         self.grid_y = pos_y
 
         # Pixel position
-        self.x = pos_x * tile_size
+        self.x = (pos_x+0.5) * tile_size
         self.y = pos_y * tile_size
 
         # Movement
@@ -71,6 +71,7 @@ class Player:
         screen.blit(body, draw_position)
 
     def move(self, board):
+        self.check_new_direction(board)
         if self.direction is not None:
             dx, dy = DIRECTIONS[self.direction]
 
@@ -105,6 +106,7 @@ class Player:
     def check_new_direction(self, board):
         if self.buffered_direction is not None:
             dx, dy = DIRECTIONS[self.buffered_direction]
+            print(self.grid_x + dx, self.grid_y + dy)
             if not isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
                 self.direction = self.buffered_direction
                 self.buffered_direction = None

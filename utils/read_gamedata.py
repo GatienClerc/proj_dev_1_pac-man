@@ -28,7 +28,7 @@ def read_gamedata(tile_size, game_area, pixel_size):
                     #TODO check all posibilities
                     row.append(Ground(tile_size*count_col, game_area+tile_size*count_row, pixel_size, False, False))
                     if char == "p":
-                        player = Player(count_col+0.5, count_row, pixel_size, tile_size, game_area)
+                        player = Player(count_col, count_row, pixel_size, tile_size, game_area)
                 count_col += 1
             board.append(row)
             count_row += 1

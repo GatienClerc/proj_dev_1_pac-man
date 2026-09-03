@@ -13,7 +13,6 @@ from utils.read_gamedata import read_gamedata
 
 def game_innit(game_area, tile_size, pixel_size):
     board, player = read_gamedata(tile_size, game_area, pixel_size)
-    player.buffered_direction=3
     return board, player
 
 
