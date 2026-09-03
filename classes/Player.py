@@ -71,7 +71,6 @@ class Player:
         screen.blit(body, draw_position)
 
     def move(self, board):
-        self.check_new_direction(board)
         if self.direction is not None:
             dx, dy = DIRECTIONS[self.direction]
 
@@ -85,12 +84,15 @@ class Player:
                 self.grid_x = int(self.x / self.tile_size)
                 self.grid_y = int(self.y / self.tile_size)
                 
+                self.check_new_direction(board)
                 self.check_direction(board)
+        elif self.buffered_direction is not None:
+            self.check_new_direction(board)
 
     def wrap_position(self, board):
         """Wrap the ghost around the edges of the board."""
 
-        width = len(board[0]) * self.tile_size
+        width = (len(board[0])-1) * self.tile_size
         height = len(board) * self.tile_size
 
         if self.x >= width:
@@ -98,7 +100,7 @@ class Player:
         elif self.x < 0:
             self.x = (len(board[0]) - 1) * self.tile_size
 
-        if self.y >= height:
+        if self.y >= height-1:
             self.y = 0
         elif self.y < 0:
             self.y = (len(board) - 1) * self.tile_size

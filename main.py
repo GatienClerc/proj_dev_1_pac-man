@@ -1,6 +1,5 @@
 import pygame
 from display.game import game_innit, display_elements
-#from utils.movement_manager import *
 pygame.init()
 
 PIXEL_SIZE = 3
@@ -22,9 +21,16 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-    pressed_keys = pygame.key.get_pressed()
-    #player_movement(screen, board, pressed_keys, player, PIXEL_SIZE, TILE_SIZE, WIDTH, GAME, FOOT)
+            
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                player.buffered_direction = 2
+            elif event.key == pygame.K_RIGHT:
+                player.buffered_direction = 1
+            elif event.key == pygame.K_DOWN:
+                player.buffered_direction = 0
+            elif event.key == pygame.K_LEFT:
+                player.buffered_direction = 3
 
     pygame.display.flip()
 
