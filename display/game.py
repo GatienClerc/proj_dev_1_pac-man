@@ -17,19 +17,13 @@ from utils.read_gamedata import read_gamedata
 from utils.wall_tileset import set_wall_image
 
 def game_innit(game_area, tile_size, pixel_size):
-    board = read_gamedata(tile_size, game_area, pixel_size)
+    board, player = read_gamedata(tile_size, game_area, pixel_size)
     set_wall_image(board, pixel_size)
-    ghosts = [
-        RedGhost(13.5, 11, pixel_size, tile_size, game_area),
-        CyanGhost(11.5, 14, pixel_size, tile_size, game_area),
-        PinkGhost(13.5, 14, pixel_size, tile_size, game_area),
-        OrangeGhost(15.5, 14, pixel_size, tile_size, game_area)
-    ]
-    return board, ghosts
-    
+    return board, player
 
-def game_screen(screen, board, ghosts):
+def game_screen(screen, board, player, ghosts):
     display_board(screen, board)
+    display_player(screen, player, board)
     display_ghosts(screen, ghosts, board)
 
 
@@ -37,6 +31,10 @@ def display_board(screen, board):
     for col in board:
         for tile in col:
             tile.draw(screen)
+
+def display_player(screen, player, board):
+    player.move(board)
+    player.draw(screen)
 
 def display_ghosts(screen, ghosts, board):
     for ghost in ghosts:
