@@ -167,36 +167,30 @@ class Ghost:
         """Move the ghost and update its direction when reaching a tile center."""
         dx, dy = DIRECTIONS[self.direction]
 
-        old_x = self.x
-        old_y = self.y
-
+        # Move
         self.x += dx * self.speed
         self.y += dy * self.speed
-
         self.wrap_position(board)
 
-        # Center of the ghost
-        new_center_x = self.x + self.tile_size / 2
-        new_center_y = self.y + self.tile_size / 2
+        # Current tile
+        center_x = self.x + self.tile_size / 2
+        center_y = self.y + self.tile_size / 2
 
-        self.grid_x = int(new_center_x // self.tile_size)
-        self.grid_y = int(new_center_y // self.tile_size)
+        self.grid_x = int(center_x // self.tile_size)
+        self.grid_y = int(center_y // self.tile_size)
 
         tile_center_x = self.grid_x * self.tile_size + self.tile_size / 2
         tile_center_y = self.grid_y * self.tile_size + self.tile_size / 2
 
-        # Only check the axis we're moving along.
-        if dx != 0:
-            reached_center = (
-                    abs(new_center_x - tile_center_x) < self.speed-0.1
-            )
-        else:
-            reached_center = (
-                    abs(new_center_y - tile_center_y) < self.speed-0.1
-            )
+        # Check whether we've reached the center of the current tile
+        distance = (
+            abs(center_x - tile_center_x)
+            if dx
+            else abs(center_y - tile_center_y)
+        )
 
-        if reached_center:
-            # Snap to the tile center
+        if distance < self.speed - 0.1:
+            # Snap to the grid
             self.x = self.grid_x * self.tile_size
             self.y = self.grid_y * self.tile_size
 
