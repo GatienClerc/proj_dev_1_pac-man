@@ -70,7 +70,7 @@ class Ghost:
         self.grid_y = pos_y
 
         # Pixel position
-        self.x = pos_x * tile_size
+        self.x = (pos_x+0.5) * tile_size
         self.y = pos_y * tile_size
 
         # Movement
@@ -78,7 +78,7 @@ class Ghost:
         self.tile_size = tile_size
         self.game_area = game_area
         self.direction = 1
-        self.speed = tile_size / 16
+        self.speed = pixel_size
         self.is_alive = True
 
         # AI
@@ -174,6 +174,7 @@ class Ghost:
         self.wrap_position(board)
 
         # Change direction only when centered on a tile
+        #TODO make better center control
         if self.x % self.tile_size == 0 and self.y % self.tile_size == 0:
             self.grid_x = int(self.x / self.tile_size)
             self.grid_y = int(self.y / self.tile_size)
