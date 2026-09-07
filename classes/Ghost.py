@@ -27,9 +27,9 @@ from utils.spritesheet import spritesheet
 ########################################################################################################################
 
 # Directions:
-# 0 = North
+# 0 = South
 # 1 = East
-# 2 = South
+# 2 = North
 # 3 = West
 DIRECTIONS = (
     (0, 1),
@@ -78,7 +78,7 @@ class Ghost:
         self.tile_size = tile_size
         self.game_area = game_area
         self.direction = 1
-        self.speed = pixel_size
+        self.speed = pixel_size*0.9
         self.is_alive = True
 
         # AI
@@ -164,20 +164,41 @@ class Ghost:
     ####################################################################################################################
 
     def move(self, board):
-        """Move the ghost and update its direction at the center of a tile."""
-
+        """Move the ghost and update its direction when reaching a tile center."""
         dx, dy = DIRECTIONS[self.direction]
+
+        old_x = self.x
+        old_y = self.y
 
         self.x += dx * self.speed
         self.y += dy * self.speed
 
         self.wrap_position(board)
 
-        # Change direction only when centered on a tile
-        #TODO make better center control
-        if self.x % self.tile_size == 0 and self.y % self.tile_size == 0:
-            self.grid_x = int(self.x / self.tile_size)
-            self.grid_y = int(self.y / self.tile_size)
+        # Center of the ghost
+        new_center_x = self.x + self.tile_size / 2
+        new_center_y = self.y + self.tile_size / 2
+
+        self.grid_x = int(new_center_x // self.tile_size)
+        self.grid_y = int(new_center_y // self.tile_size)
+
+        tile_center_x = self.grid_x * self.tile_size + self.tile_size / 2
+        tile_center_y = self.grid_y * self.tile_size + self.tile_size / 2
+
+        # Only check the axis we're moving along.
+        if dx != 0:
+            reached_center = (
+                    abs(new_center_x - tile_center_x) < self.speed-0.1
+            )
+        else:
+            reached_center = (
+                    abs(new_center_y - tile_center_y) < self.speed-0.1
+            )
+
+        if reached_center:
+            # Snap to the tile center
+            self.x = self.grid_x * self.tile_size
+            self.y = self.grid_y * self.tile_size
 
             self.ai(board)
 

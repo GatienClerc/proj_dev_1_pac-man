@@ -18,9 +18,9 @@ from classes.Wall import Wall
 ########################################################################################################################
 
 # Directions:
-# 0 = North
+# 0 = South
 # 1 = East
-# 2 = South
+# 2 = North
 # 3 = West
 DIRECTIONS = (
     (0, 1),
