@@ -1,3 +1,12 @@
+#***********************************************************************************************************************
+# Program name:         main.py
+# Description:          the main programme
+# Author:               Gatien Clerc
+# Creation date:        08.09.2026
+# Modified by:          -
+# Modification date:    -
+# Version:              0.3
+#***********************************************************************************************************************
 import pygame
 from display.menu import menu
 from display.setting import setting

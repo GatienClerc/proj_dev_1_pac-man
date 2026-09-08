@@ -5,7 +5,7 @@
 # Creation date:        23.08.2026
 # Modified by:          Gatien Clerc
 # Modification date:    01.09.26
-# Version:              0.3
+# Version:              0.5
 #***********************************************************************************************************************
 import pygame
 from classes.Wall import Wall
