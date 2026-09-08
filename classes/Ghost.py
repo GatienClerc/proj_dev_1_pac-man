@@ -171,7 +171,7 @@ class Ghost:
     # Movement
     ####################################################################################################################
 
-    def move(self, board):
+    def move(self, board, player):
         """Move the ghost and update its direction when reaching a tile center."""
         if self.state == WAIT:
             self.wait_timer +=1
@@ -208,7 +208,7 @@ class Ghost:
             self.x = self.grid_x * self.tile_size
             self.y = self.grid_y * self.tile_size
             if self.state != WAIT:
-                self.ai(board)
+                self.ai(board, player)
 
     def wrap_position(self, board):
         """Wrap the ghost around the edges of the board."""
@@ -276,12 +276,12 @@ class Ghost:
     # AI
     ####################################################################################################################
 
-    def chase(self):
+    def chase(self, player):
         """Return the target position when chasing Pac-Man."""
 
         return [0, 0]
 
-    def update_target(self):
+    def update_target(self, player):
         """Update the ghost's target and state."""
 
         if self.state == SCATTER:
@@ -290,7 +290,7 @@ class Ghost:
 
         elif self.state == CHASE:
             self.speed = self.pixel_size * SPEED_NORMAL
-            self.target = self.chase()
+            self.target = self.chase(player)
 
         elif self.state == DEAD:
             self.speed = self.pixel_size * SPEED_DEAD
@@ -312,7 +312,7 @@ class Ghost:
             if self.grid_y <= GHOST_HOME_IN[1]:
                 self.state = SCATTER
 
-    def ai(self, board):
+    def ai(self, board, player):
         """Choose the next direction for the ghost."""
 
         paths = self.check_path(board)
@@ -338,7 +338,7 @@ class Ghost:
             return
 
         # Update target according to the current state
-        self.update_target()
+        self.update_target(player)
 
         # Choose the direction closest to the target
         self.direction = self.get_direction(options)

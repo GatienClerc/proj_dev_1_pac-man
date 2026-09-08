@@ -7,7 +7,6 @@
 # Modification date:    -
 # Version:              0.1
 #***********************************************************************************************************************
-from classes.Ghost import Ghost
 from utils.read_gamedata import read_gamedata
 from utils.wall_tileset import set_wall_image
 
@@ -23,7 +22,7 @@ def game_innit(game_area, tile_size, pixel_size):
 def game_screen(screen, board, player, ghosts):
     display_board(screen, board)
     display_player(screen, player, board)
-    display_ghosts(screen, ghosts, board)
+    display_ghosts(screen, ghosts, board, player)
     update_ghosts(ghosts)
 
 
@@ -38,10 +37,10 @@ def display_player(screen, player, board):
     player.draw(screen)
 
 
-def display_ghosts(screen, ghosts, board):  
+def display_ghosts(screen, ghosts, board, player):  
     for ghost in ghosts:
         ghost.draw(screen)
-        ghost.move(board)
+        ghost.move(board, player)
 
 
 def update_ghosts(ghosts):

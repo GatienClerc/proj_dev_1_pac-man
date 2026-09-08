@@ -18,3 +18,6 @@ class RedGhost(Ghost):
         self.state="scatter"
         self.speed = self.pixel_size * 0.9
         self.scatter_target=[27,1]
+
+    def chase(self, player):
+        return [player.grid_x, player.grid_y]
