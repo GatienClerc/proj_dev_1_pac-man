@@ -2,13 +2,18 @@ import pygame
 from display.menu import menu
 from display.setting import setting
 from display.game import game_innit, game
+from utils.save import load
 
 pygame.init()
+settings = load()
 
-PIXEL_SIZE = 3
+volume = settings["audio"]
+PIXEL_SIZE = settings["pixel_size"]
+
 TILE_SIZE = 8 * PIXEL_SIZE
 WIDTH = 28 * TILE_SIZE
 HEIGHT = 36 * TILE_SIZE
+GAME = 3 * TILE_SIZE
 
 pygame.display.set_caption("Pac-Man")
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -22,7 +27,7 @@ while etat != "quit":
         etat = menu(screen, WIDTH, HEIGHT, font)
 
     elif etat == "setting":
-        etat, PIXEL_SIZE = setting(screen, WIDTH, HEIGHT, font, PIXEL_SIZE, None )
+        etat, PIXEL_SIZE, volume = setting(screen, WIDTH, HEIGHT, font, PIXEL_SIZE, volume)
 
         TILE_SIZE = 8 * PIXEL_SIZE
 

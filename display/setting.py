@@ -1,22 +1,18 @@
 import pygame
+from utils.save import save
 
 def setting(screen, width, height, font, pixel_size, volume):
 
     clock = pygame.time.Clock()
-
-    volume = 70
     dragging = False
 
     title_y = height // 8
-
     slider_width = width // 2
     slider_x = (width - slider_width) // 2
     slider_y = height // 4
-
     btn_size = height // 12
 
     btn_minus = pygame.Rect(width // 2 - btn_size * 2, height // 2, btn_size, btn_size)
-
     btn_plus = pygame.Rect( width // 2 + btn_size, height // 2, btn_size, btn_size)
 
     btn_apply_width = width // 3
@@ -76,9 +72,15 @@ def setting(screen, width, height, font, pixel_size, volume):
                     return "menu", pixel_size
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-
                 if btn_apply.collidepoint(event.pos):
-                    return "menu", pixel_size
+                    settings = {
+                        "audio": int(volume),
+                        "pixel_size": pixel_size
+                    }
+
+                    save(settings)
+
+                    return "menu", pixel_size, volume
 
                 if btn_minus.collidepoint(event.pos):
                     pixel_size = max(1, pixel_size - 1)
