@@ -141,7 +141,7 @@ class Ghost:
         )
 
         # Draw body unless the ghost is dead
-        if self.state != DEAD:
+        if self.state not in (DEAD, GET_IN):
             body = pygame.transform.scale_by(
                 self.body[self.animation_frame],
                 self.pixel_size,
@@ -285,12 +285,15 @@ class Ghost:
         """Update the ghost's target and state."""
 
         if self.state == SCATTER:
+            self.speed = self.pixel_size * SPEED_NORMAL
             self.target = self.scatter_target
 
         elif self.state == CHASE:
+            self.speed = self.pixel_size * SPEED_NORMAL
             self.target = self.chase()
 
         elif self.state == DEAD:
+            self.speed = self.pixel_size * SPEED_DEAD
             self.target = list(GHOST_HOME_IN)
 
             if (self.grid_x, self.grid_y) == GHOST_HOME_IN:
@@ -299,10 +302,11 @@ class Ghost:
         elif self.state == GET_IN:
             self.target = list(GHOST_HOUSE_OUT)
 
-            if self.grid_y >= GHOST_HOUSE_OUT[1]:
+            if self.grid_y == GHOST_HOUSE_OUT[1] and self.grid_x == GHOST_HOUSE_OUT[0]:
                 self.state = GET_OUT
 
         elif self.state == GET_OUT:
+            self.speed = self.pixel_size * SPEED_NORMAL
             self.target = list(GHOST_HOME_IN)
 
             if self.grid_y <= GHOST_HOME_IN[1]:
@@ -329,6 +333,7 @@ class Ghost:
 
         # Scared ghosts choose a random available direction
         if self.state == SCARED:
+            self.speed = self.pixel_size * SPEED_SCARED
             self.direction = random.choice(options)
             return
 
@@ -337,3 +342,9 @@ class Ghost:
 
         # Choose the direction closest to the target
         self.direction = self.get_direction(options)
+    
+    def change_state_to(self, new_state):
+        """Change the ghost's state."""
+        if self.state != new_state and self.state not in (DEAD, GET_IN, GET_OUT, WAIT):
+            self.state = new_state
+            self.direction = (self.direction + 2) % 4
