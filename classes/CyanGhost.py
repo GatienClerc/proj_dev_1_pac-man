@@ -15,4 +15,5 @@ from classes.Ghost import Ghost
 class CyanGhost(Ghost):
     def __init__(self, pos_x, pos_y, pixel_size=1, tile_size=8, game_area=24):
         super().__init__(pos_x, pos_y, pixel_size, tile_size, game_area, color=(0,255,255))
+        self.wait_time = 240
         self.scatter_target = [27, 29]

@@ -45,11 +45,17 @@ SCARED = "scared"
 DEAD = "dead"
 GET_IN = "get_in"
 GET_OUT = "get_out"
+WAIT = "wait"
 
 # Ghost house positions
 GHOST_HOME_IN = (13, 11)
 GHOST_HOUSE_OUT = (13, 14)
 
+#speed multiplier
+SPEED_WAIT = 0
+SPEED_NORMAL = 0.9
+SPEED_SCARED = 0.625
+SPEED_DEAD = 2
 
 ########################################################################################################################
 # Class
@@ -78,17 +84,19 @@ class Ghost:
         self.tile_size = tile_size
         self.game_area = game_area
         self.direction = 1
-        self.speed = pixel_size*0.9
+        self.speed = SPEED_WAIT
         self.is_alive = True
 
         # AI
-        self.state = GET_OUT
+        self.state = WAIT
         self.scatter_target = [0, 0]
         self.target = [0, 0]
-
+        self.wait_time = 240 #in frame (60fps)
+        self.wait_timer = 0
+        
         # Animation
         self.animation_frame = 0
-        self.animation_delay = 10
+        self.animation_delay = 20
         self.animation_delay_count = 0
 
         # Color
@@ -165,6 +173,12 @@ class Ghost:
 
     def move(self, board):
         """Move the ghost and update its direction when reaching a tile center."""
+        if self.state == WAIT:
+            self.wait_timer +=1
+            if self.wait_timer >= self.wait_time:
+                self.state = GET_OUT
+                self.speed = self.pixel_size*SPEED_NORMAL
+        
         dx, dy = DIRECTIONS[self.direction]
 
         # Move
@@ -193,8 +207,8 @@ class Ghost:
             # Snap to the grid
             self.x = self.grid_x * self.tile_size
             self.y = self.grid_y * self.tile_size
-
-            self.ai(board)
+            if self.state != WAIT:
+                self.ai(board)
 
     def wrap_position(self, board):
         """Wrap the ghost around the edges of the board."""

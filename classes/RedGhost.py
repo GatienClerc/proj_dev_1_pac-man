@@ -16,4 +16,5 @@ class RedGhost(Ghost):
     def __init__(self, pos_x, pos_y, pixel_size=1, tile_size=8, game_area=24):
         super().__init__(pos_x, pos_y, pixel_size, tile_size, game_area, color=(255,0,0))
         self.state="scatter"
+        self.speed = self.pixel_size * 0.9
         self.scatter_target=[27,1]
