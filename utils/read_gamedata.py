@@ -87,5 +87,11 @@ def read_gamedata(tile_size, game_area, pixel_size):
                 count_col += 1
             board.append(row)
             count_row += 1
-
+    
+    for ghost in ghosts:
+        if isinstance(ghost, CyanGhost):
+            for g in ghosts:
+                if isinstance(g, RedGhost):
+                    ghost.red_ghost = g
+    
     return board, player, ghosts
