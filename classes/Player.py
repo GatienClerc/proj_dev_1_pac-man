@@ -46,6 +46,7 @@ class Player:
         self.pixel_size = pixel_size
         self.tile_size = tile_size
         self.game_area = game_area
+        self.last_direction = 0
         self.direction = None
         self.buffered_direction = None
         self.speed = pixel_size
@@ -110,6 +111,7 @@ class Player:
             dx, dy = DIRECTIONS[self.buffered_direction]
             if not isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
                 self.direction = self.buffered_direction
+                self.last_direction = self.buffered_direction
                 self.buffered_direction = None
     
     def check_direction(self, board):
