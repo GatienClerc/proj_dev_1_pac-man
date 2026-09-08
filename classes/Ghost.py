@@ -157,6 +157,18 @@ class Ghost:
             screen.blit(eyes, draw_position)
 
         self.update_animation()
+        """
+         #show target debug
+        draw_position = (
+            self.target[0]*self.tile_size - offset,
+            self.target[1]*self.tile_size + self.game_area - offset,
+        )
+        body = pygame.transform.scale_by(
+            self.body[self.animation_frame],
+            self.pixel_size,
+        )
+        screen.blit(body, draw_position)
+        """
 
     def update_animation(self):
         """Update the ghost's animation frame."""

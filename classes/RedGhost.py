@@ -17,7 +17,7 @@ class RedGhost(Ghost):
         super().__init__(pos_x, pos_y, pixel_size, tile_size, game_area, color=(255,0,0))
         self.state="scatter"
         self.speed = self.pixel_size * 0.9
-        self.scatter_target=[27,1]
+        self.scatter_target=[26,1]
 
     def chase(self, player):
         return [player.grid_x, player.grid_y]
