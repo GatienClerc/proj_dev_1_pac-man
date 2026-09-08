@@ -3,9 +3,9 @@
 # Description:          Class for the Player object that the user will control
 # Author:               Thierry Perroud
 # Creation date:        20.08.2026
-# Modified by:          -
-# Modification date:    -
-# Version:              0.1
+# Modified by:          Thierry Perroud
+# Modification date:    08.09.2026
+# Version:              0.3
 #***********************************************************************************************************************
 ########################################################################################################################
 # Imports                                                                                                              #
@@ -18,15 +18,11 @@ from classes.Wall import Wall
 ########################################################################################################################
 
 # Directions:
-# 0 = North
-# 1 = East
-# 2 = South
-# 3 = West
 DIRECTIONS = (
-    (0, 1),
-    (1, 0),
-    (0, -1),
-    (-1, 0),
+    (0, 1),     # South
+    (1, 0),     # East
+    (0, -1),    # North
+    (-1, 0),    # West
 )
 ########################################################################################################################
 # Class                                                                                                                #
@@ -70,6 +66,7 @@ class Player:
         )
         screen.blit(body, draw_position)
 
+
     def move(self, board):
         if self.direction is not None:
             dx, dy = DIRECTIONS[self.direction]
@@ -86,8 +83,12 @@ class Player:
                 
                 self.check_new_direction(board)
                 self.check_direction(board)
+
         elif self.buffered_direction is not None:
             self.check_new_direction(board)
+
+        self.get_collectibles(board)
+
 
     def wrap_position(self, board):
         """Wrap the ghost around the edges of the board."""
@@ -105,14 +106,27 @@ class Player:
         elif self.y < 0:
             self.y = (len(board) - 1) * self.tile_size
 
+
     def check_new_direction(self, board):
         if self.buffered_direction is not None:
             dx, dy = DIRECTIONS[self.buffered_direction]
             if not isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
                 self.direction = self.buffered_direction
                 self.buffered_direction = None
-    
+
+
     def check_direction(self, board):
         dx, dy = DIRECTIONS[self.direction]
         if isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
             self.direction = None
+
+
+    def get_collectibles(self, board):
+        if not board[self.grid_y][self.grid_x].item_type: return
+        if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up()
+
+        board[self.grid_y][self.grid_x].remove_item()
+
+
+    def power_up(self):
+        pass
