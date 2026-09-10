@@ -20,7 +20,7 @@ class Tile:
     Parent class for all tiles.
     """
     ### Attributes ###
-    SIZE = 24
+    SIZE = 8
 
     ### Constructor ###
     def __init__(self, pos_x, pos_y, pixel_size):

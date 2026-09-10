@@ -3,67 +3,130 @@
 # Description:          Class for the Player object that the user will control
 # Author:               Thierry Perroud
 # Creation date:        20.08.2026
-# Modified by:          -
-# Modification date:    -
-# Version:              0.1
+# Modified by:          Thierry Perroud
+# Modification date:    08.09.2026
+# Version:              0.3
 #***********************************************************************************************************************
 ########################################################################################################################
 # Imports                                                                                                              #
 ########################################################################################################################
 import pygame
+from classes.Wall import Wall
 
+########################################################################################################################
+# Constants
+########################################################################################################################
+
+# Directions:
+DIRECTIONS = (
+    (0, 1),     # South
+    (1, 0),     # East
+    (0, -1),    # North
+    (-1, 0),    # West
+)
 ########################################################################################################################
 # Class                                                                                                                #
 ########################################################################################################################
 class Player:
-    ### Attributes ###
-    sprite = None
-
     ### Constructor ###
-    def __init__(self, pos_x,pos_y):
-        self.pos_x = pos_x
-        self.pos_y = pos_y
+    def __init__(self, pos_x,pos_y, pixel_size, tile_size, game_area):
+        # Tile position
+        self.grid_x = pos_x
+        self.grid_y = pos_y
+
+        # Pixel position
+        self.x = (pos_x+0.5) * tile_size
+        self.y = pos_y * tile_size
+
+        # Movement
+        self.pixel_size = pixel_size
+        self.tile_size = tile_size
+        self.game_area = game_area
+        self.direction = None
+        self.buffered_direction = None
+        self.speed = pixel_size
+        self.is_alive = True
+        
+        self.body = pygame.image.load("assets/sprites/player/pacman.png")
 
 
     ### Methods ###
-    def move(self, direction):
-        """
-        Moves the player to the specified direction.
+    def draw(self, screen):
+        offset = 3 * self.pixel_size
 
-        :param direction: Can be "up", "down", "left" or "right
-        :return:
-        """
-        if direction == "up":
-            self.pos_y -= 0.5
+        draw_position = (
+            self.x - offset,
+            self.y + self.game_area - offset,
+        )
 
-        elif direction == "down":
-            self.pos_y += 0.5
-
-        elif direction == "left":
-            self.pos_x -= 0.5
-
-        elif direction == "right":
-            self.pos_x += 0.5
+        # Draw body unless the ghost is dead
+        body = pygame.transform.scale_by(
+            self.body,
+            self.pixel_size,
+        )
+        screen.blit(body, draw_position)
 
 
-    def set_sprite(self, new_sprite):
-        """
-        Sets a new sprite to the Player object when the player is moving.
+    def move(self, board):
+        if self.direction is not None:
+            dx, dy = DIRECTIONS[self.direction]
 
-        :param new_sprite: The new sprite of the Player object
-        :return:
-        """
-        # TODO: Set new player sprite when player is moving
+            self.x += dx * self.speed
+            self.y += dy * self.speed
+
+            self.wrap_position(board)
+
+            # Change direction only when centered on a tile
+            if self.x % self.tile_size == 0 and self.y % self.tile_size == 0:
+                self.grid_x = int(self.x / self.tile_size)
+                self.grid_y = int(self.y / self.tile_size)
+                
+                self.check_new_direction(board)
+                self.check_direction(board)
+
+        elif self.buffered_direction is not None:
+            self.check_new_direction(board)
+
+        self.get_collectibles(board)
+
+
+    def wrap_position(self, board):
+        """Wrap the ghost around the edges of the board."""
+
+        width = (len(board[0])-1) * self.tile_size
+        height = (len(board)-1) * self.tile_size
+
+        if self.x >= width:
+            self.x = 0
+        elif self.x < 0:
+            self.x = (len(board[0]) - 1) * self.tile_size
+
+        if self.y >= height:
+            self.y = 0
+        elif self.y < 0:
+            self.y = (len(board) - 1) * self.tile_size
+
+
+    def check_new_direction(self, board):
+        if self.buffered_direction is not None:
+            dx, dy = DIRECTIONS[self.buffered_direction]
+            if not isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
+                self.direction = self.buffered_direction
+                self.buffered_direction = None
+
+
+    def check_direction(self, board):
+        dx, dy = DIRECTIONS[self.direction]
+        if isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
+            self.direction = None
+
+
+    def get_collectibles(self, board):
+        if not board[self.grid_y][self.grid_x].item_type: return
+        if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up()
+
+        board[self.grid_y][self.grid_x].remove_item()
+
+
+    def power_up(self):
         pass
-
-
-    def set_position(self, pos_x, pos_y):
-        """
-        Teleports player into a new position on the game board.
-
-        :param pos_x: new horizontal position of the player
-        :param pos_y: new vertical position of the player
-        :return:
-        """
-        self.pos_x = pos_x
-        self.pos_y = pos_y
