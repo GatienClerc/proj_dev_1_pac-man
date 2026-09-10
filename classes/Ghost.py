@@ -93,7 +93,7 @@ class Ghost:
         self.state = WAIT
         self.scatter_target = [0, 0]
         self.target = [0, 0]
-        self.wait_time = 4*60 #in frame (60fps)
+        self.wait_time = 0
         self.wait_timer = 0
         
         self.scared_time = 6*60
@@ -174,7 +174,7 @@ class Ghost:
 
         self.update_animation()
         """
-         #show target debug
+        #show target debug
         draw_position = (
             self.target[0]*self.tile_size - offset,
             self.target[1]*self.tile_size + self.game_area - offset,
@@ -187,16 +187,21 @@ class Ghost:
         """
 
     def update_animation(self):
-        """Update the ghost's animation frame."""
+        """Update the ghost animation."""
 
         self.animation_delay_count += 1
 
-        if self.animation_delay_count >= self.animation_delay:
-            self.animation_delay_count = 0
-            self.animation_frame = (self.animation_frame + 1) % 2
-            self.color = self.main_color
-            if self.state == SCARED:
-                self.color = color_scared[self.animation_frame]
+        if self.animation_delay_count < self.animation_delay:
+            return
+
+        self.animation_delay_count = 0
+        self.animation_frame = (self.animation_frame + 1) % 2
+
+        self.color = (
+            color_scared[self.animation_frame]
+            if self.state == SCARED
+            else self.main_color
+        )
 
     ####################################################################################################################
     # Movement
@@ -264,38 +269,35 @@ class Ghost:
     ####################################################################################################################
 
     def check_path(self, board):
-        """Return the available directions from the current tile."""
+        """Return available movement directions."""
 
-        paths = [False] * 4
+        available = [False] * 4
 
         height = len(board)
         width = len(board[0])
 
         for direction, (dx, dy) in enumerate(DIRECTIONS):
-            x = (self.grid_x + dx) % width
-            y = self.grid_y + dy
+            next_x = (self.grid_x + dx) % width
+            next_y = self.grid_y + dy
 
-            # Ignore positions outside the board vertically
-            if not 0 <= y < height:
+            if not (0 <= next_y < height):
                 continue
 
-            tile = board[y][x]
+            tile = board[next_y][next_x]
 
-            # Normal walkable tile
             if not isinstance(tile, Wall):
-                paths[direction] = True
+                available[direction] = True
 
-            # Ghost gate can only be crossed while entering/leaving
             elif tile.is_gate and self.state in (GET_IN, GET_OUT):
-                paths[direction] = True
+                available[direction] = True
 
-        return paths
+        return available
 
-    def get_direction(self, paths):
-        """Choose the direction that gets closest to the target."""
+    def get_direction(self, directions):
+        """Return the direction closest to the current target."""
 
         return min(
-            paths,
+            directions,
             key=lambda direction: math.dist(
                 (
                     self.grid_x + DIRECTIONS[direction][0],
@@ -315,7 +317,7 @@ class Ghost:
         return [0, 0]
 
     def update_target(self, player):
-        """Update the ghost's target and state."""
+        """Update target and speed according to state."""
 
         if self.state == SCATTER:
             self.speed = self.pixel_size * SPEED_NORMAL
@@ -335,7 +337,7 @@ class Ghost:
         elif self.state == GET_IN:
             self.target = list(GHOST_HOUSE_OUT)
 
-            if self.grid_y == GHOST_HOUSE_OUT[1] and self.grid_x == GHOST_HOUSE_OUT[0]:
+            if (self.grid_x, self.grid_y) == GHOST_HOUSE_OUT:
                 self.state = GET_OUT
 
         elif self.state == GET_OUT:
@@ -346,40 +348,53 @@ class Ghost:
                 self.state = SCATTER
 
     def ai(self, board, player):
-        """Choose the next direction for the ghost."""
+        """Choose the next movement direction."""
 
-        paths = self.check_path(board)
+        available_paths = self.check_path(board)
 
-        # Prevent the ghost from immediately turning around
         opposite_direction = (self.direction + 2) % 4
 
-        options = [
+        valid_directions = [
             direction
             for direction in range(4)
-            if paths[direction] and direction != opposite_direction
+            if available_paths[direction]
+               and direction != opposite_direction
         ]
 
-        # If there is no other option, turn around
-        if not options:
+        if not valid_directions:
             self.direction = opposite_direction
             return
 
-        # Scared ghosts choose a random available direction
         if self.state == SCARED:
             self.speed = self.pixel_size * SPEED_SCARED
-            self.direction = random.choice(options)
+            self.direction = random.choice(valid_directions)
+
             if self.scared_timer >= self.scared_time:
                 self.state = SCATTER
-            return
-        self.scared_timer = 0
-        # Update target according to the current state
-        self.update_target(player)
 
-        # Choose the direction closest to the target
-        self.direction = self.get_direction(options)
-    
+            return
+
+        self.scared_timer = 0
+
+        self.update_target(player)
+        self.direction = self.get_direction(valid_directions)
+
     def change_state_to(self, new_state):
-        """Change the ghost's state."""
-        if self.state != new_state and self.state not in (DEAD, GET_IN, GET_OUT, WAIT, SCARED):
-            self.state = new_state
-            self.direction = (self.direction + 2) % 4
+        """Change ghost state and reverse direction if required."""
+
+        blocked_states = {
+            DEAD,
+            GET_IN,
+            GET_OUT,
+            WAIT,
+            SCARED,
+        }
+
+        if self.state == new_state:
+            return
+
+        if self.state in blocked_states:
+            return
+
+        self.state = new_state
+        self.direction = (self.direction + 2) % 4
