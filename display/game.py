@@ -8,7 +8,6 @@
 # Version:              0.5
 #***********************************************************************************************************************
 import pygame
-from classes.Wall import Wall
 from utils.read_gamedata import read_gamedata
 from utils.wall_tileset import set_wall_image
 
@@ -18,17 +17,10 @@ def game_innit(game_area, tile_size, pixel_size):
     return board, player
 
 
-def game_screen(screen, board, font ,score, tile_size, player):
+def game_screen(screen, board, font ,score , tile_size, player):
     draw_score(screen, font, score, tile_size)
     display_board(screen, board)
     display_player(screen, player, board)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            return "quit"
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                return "menu"
 
 def display_board(screen, board):
     for col in board:

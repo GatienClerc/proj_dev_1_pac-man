@@ -35,34 +35,9 @@ state = menu(screen, WIDTH, HEIGHT, font)
 score = "00"
 
 clock = pygame.time.Clock()
-running = True
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 board, player = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
-
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player.buffered_direction = 2
-            elif event.key == pygame.K_RIGHT:
-                player.buffered_direction = 1
-            elif event.key == pygame.K_DOWN:
-                player.buffered_direction = 0
-            elif event.key == pygame.K_LEFT:
-                player.buffered_direction = 3
-
-    pygame.display.flip()
-
-    screen.fill((0,0,0))
-    game_screen(screen, board, player)
-    pygame.display.flip()
-
-    clock.tick(60)
-
 
 while state != "quit":
     if state == "menu":
@@ -84,6 +59,30 @@ while state != "quit":
         font = pygame.font.Font("assets/font/Pacfont.ttf",TILE_SIZE)
 
     elif state == "game":
-        board = game_innit(GAME, TILE_SIZE,PIXEL_SIZE)
-        state = game_screen(screen, board, font, score, TILE_SIZE, player)
+        board, player = game_innit(GAME, TILE_SIZE,PIXEL_SIZE)
+
+        running_game = True
+
+        while running_game:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running_game = False
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        state = "menu"
+                        running_game = False
+                    elif event.key == pygame.K_UP:
+                        player.buffered_direction = 2
+                    elif event.key == pygame.K_RIGHT:
+                        player.buffered_direction = 1
+                    elif event.key == pygame.K_DOWN:
+                        player.buffered_direction = 0
+                    elif event.key == pygame.K_LEFT:
+                        player.buffered_direction = 3
+
+            screen.fill((0, 0, 0))
+            game_screen(screen, board, font, score, TILE_SIZE, player)
+            pygame.display.flip()
+            clock.tick(60)
 pygame.quit()
