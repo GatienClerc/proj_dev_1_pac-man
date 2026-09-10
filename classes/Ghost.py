@@ -91,9 +91,12 @@ class Ghost:
         self.state = WAIT
         self.scatter_target = [0, 0]
         self.target = [0, 0]
-        self.wait_time = 240 #in frame (60fps)
+        self.wait_time = 4*60 #in frame (60fps)
         self.wait_timer = 0
         
+        self.scared_time = 6*60
+        self.scared_timer = 0
+
         # Animation
         self.animation_frame = 0
         self.animation_delay = 20
@@ -190,6 +193,8 @@ class Ghost:
             if self.wait_timer >= self.wait_time:
                 self.state = GET_OUT
                 self.speed = self.pixel_size*SPEED_NORMAL
+
+        self.scared_timer += 1
         
         dx, dy = DIRECTIONS[self.direction]
 
@@ -347,8 +352,10 @@ class Ghost:
         if self.state == SCARED:
             self.speed = self.pixel_size * SPEED_SCARED
             self.direction = random.choice(options)
+            if self.scared_timer >= self.scared_time:
+                self.state = SCATTER
             return
-
+        self.scared_timer = 0
         # Update target according to the current state
         self.update_target(player)
 
