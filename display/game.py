@@ -17,8 +17,8 @@ def game_innit(game_area, tile_size, pixel_size):
     return board, player
 
 
-def game_screen(screen, board, font ,score , tile_size, player):
-    draw_score(screen, font, score, tile_size)
+def game_screen(screen, board, font, tile_size, player):
+    draw_score(screen, font, player.score, tile_size)
     display_board(screen, board)
     display_player(screen, player, board)
 

@@ -32,7 +32,6 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 font = pygame.font.Font("assets/font/Pacfont.ttf", TILE_SIZE)
 
 state = menu(screen, WIDTH, HEIGHT, font)
-score = "00"
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -82,7 +81,7 @@ while state != "quit":
                         player.buffered_direction = 3
 
             screen.fill((0, 0, 0))
-            game_screen(screen, board, font, score, TILE_SIZE, player)
+            game_screen(screen, board, font, TILE_SIZE, player)
             pygame.display.flip()
             clock.tick(60)
 pygame.quit()
