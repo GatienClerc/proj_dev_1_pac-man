@@ -143,6 +143,7 @@ class Player:
         for ghost in ghosts:
             if ghost.state in ("chase", "scatter"):
                 ghost.state = "scared"
+                ghost.direction = (ghost.direction + 2) % 4
 
 
     def check_ghosts(self, ghosts):

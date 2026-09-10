@@ -57,6 +57,8 @@ SPEED_NORMAL = 0.9
 SPEED_SCARED = 0.625
 SPEED_DEAD = 2
 
+color_scared = [(0,0,255), (255,255,255)]
+
 ########################################################################################################################
 # Class
 ########################################################################################################################
@@ -103,6 +105,7 @@ class Ghost:
         self.animation_delay_count = 0
 
         # Color
+        self.main_color = color
         self.color = color
 
         # Sprites
@@ -114,13 +117,6 @@ class Ghost:
             14,
         )
 
-        for i in range(len(self.body)):
-            self.body[i] = color_swap(
-                self.body[i],
-                (255, 0, 0),
-                self.color,
-            )
-
         self.eyes = spritesheet(
             "assets/sprites/ghost/ghost_eye.png",
             2,
@@ -128,6 +124,8 @@ class Ghost:
             14,
             14,
         )
+        
+        self.scared_eyes = pygame.image.load("assets/sprites/ghost/ghost_eye_scared.png")
 
     ####################################################################################################################
     # Drawing
@@ -145,16 +143,31 @@ class Ghost:
 
         # Draw body unless the ghost is dead
         if self.state not in (DEAD, GET_IN):
-            body = pygame.transform.scale_by(
-                self.body[self.animation_frame],
+            
+            body = []
+            for i in range(len(self.body)):
+                body.append(color_swap(
+                    self.body[i],
+                    (255, 0, 0),
+                    self.color,
+                ))
+                
+            new_body = pygame.transform.scale_by(
+                body[self.animation_frame],
                 self.pixel_size,
             )
-            screen.blit(body, draw_position)
+            screen.blit(new_body, draw_position)
 
         # Draw eyes unless the ghost is scared
         if self.state != SCARED:
             eyes = pygame.transform.scale_by(
                 self.eyes[self.direction],
+                self.pixel_size,
+            )
+            screen.blit(eyes, draw_position)
+        else:
+            eyes = pygame.transform.scale_by(
+                self.scared_eyes,
                 self.pixel_size,
             )
             screen.blit(eyes, draw_position)
@@ -181,6 +194,9 @@ class Ghost:
         if self.animation_delay_count >= self.animation_delay:
             self.animation_delay_count = 0
             self.animation_frame = (self.animation_frame + 1) % 2
+            self.color = self.main_color
+            if self.state == SCARED:
+                self.color = color_scared[self.animation_frame]
 
     ####################################################################################################################
     # Movement
