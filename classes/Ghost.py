@@ -357,6 +357,6 @@ class Ghost:
     
     def change_state_to(self, new_state):
         """Change the ghost's state."""
-        if self.state != new_state and self.state not in (DEAD, GET_IN, GET_OUT, WAIT):
+        if self.state != new_state and self.state not in (DEAD, GET_IN, GET_OUT, WAIT, SCARED):
             self.state = new_state
             self.direction = (self.direction + 2) % 4

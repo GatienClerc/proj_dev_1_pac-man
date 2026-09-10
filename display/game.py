@@ -21,7 +21,7 @@ def game_innit(game_area, tile_size, pixel_size):
 
 def game_screen(screen, board, player, ghosts):
     display_board(screen, board)
-    display_player(screen, player, board)
+    display_player(screen, player, board, ghosts)
     display_ghosts(screen, ghosts, board, player)
     update_ghosts(ghosts)
 
@@ -32,8 +32,8 @@ def display_board(screen, board):
             tile.draw(screen)
 
 
-def display_player(screen, player, board):
-    player.move(board)
+def display_player(screen, player, board, ghosts):
+    player.move(board, ghosts)
     player.draw(screen)
 
 

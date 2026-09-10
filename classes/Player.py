@@ -52,6 +52,8 @@ class Player:
         self.speed = pixel_size
         self.is_alive = True
         
+        self.powered_up = False
+        
         self.body = pygame.image.load("assets/sprites/player/pacman.png")
 
 
@@ -72,7 +74,7 @@ class Player:
         screen.blit(body, draw_position)
 
 
-    def move(self, board):
+    def move(self, board, ghosts):
         if self.direction is not None:
             dx, dy = DIRECTIONS[self.direction]
 
@@ -92,7 +94,9 @@ class Player:
         elif self.buffered_direction is not None:
             self.check_new_direction(board)
 
-        self.get_collectibles(board)
+        self.get_collectibles(board, ghosts)
+        
+        self.check_ghosts(ghosts)
 
 
     def wrap_position(self, board):
@@ -127,12 +131,26 @@ class Player:
             self.direction = None
 
 
-    def get_collectibles(self, board):
+    def get_collectibles(self, board, ghosts):
         if not board[self.grid_y][self.grid_x].item_type: return
-        if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up()
+        if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up(ghosts)
 
         board[self.grid_y][self.grid_x].remove_item()
 
 
-    def power_up(self):
-        pass
+    def power_up(self, ghosts):
+        self.powered_up = True
+        for ghost in ghosts:
+            if ghost.state in ("chase", "scatter"):
+                ghost.state = "scared"
+
+
+    def check_ghosts(self, ghosts):
+        for ghost in ghosts:
+            if ghost.grid_x == self.grid_x and ghost.grid_y == self.grid_y:
+                if ghost.state != "dead":
+                    if ghost.state == "scared":
+                        ghost.state = "dead"
+                    else:
+                        #todo make the player die
+                        pass
