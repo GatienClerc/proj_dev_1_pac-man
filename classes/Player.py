@@ -18,16 +18,15 @@ from classes.Wall import Wall
 ########################################################################################################################
 
 # Directions:
-# 0 = South
-# 1 = East
-# 2 = North
-# 3 = West
 DIRECTIONS = (
-    (0, 1),
-    (1, 0),
-    (0, -1),
-    (-1, 0),
+    (0, 1),     # South
+    (1, 0),     # East
+    (0, -1),    # North
+    (-1, 0),    # West
 )
+
+dot_points = 10
+power_up = 40
 ########################################################################################################################
 # Class                                                                                                                #
 ########################################################################################################################
@@ -52,10 +51,8 @@ class Player:
         self.speed = pixel_size
         self.is_alive = True
         
-        self.powered_up = False
-        
         self.body = pygame.image.load("assets/sprites/player/pacman.png")
-
+        self.score = 0
 
     ### Methods ###
     def draw(self, screen):
@@ -136,10 +133,12 @@ class Player:
         if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up(ghosts)
 
         board[self.grid_y][self.grid_x].remove_item()
+        self.score += dot_points
 
 
     def power_up(self, ghosts):
-        self.powered_up = True
+        self.score += power_up
+        
         for ghost in ghosts:
             if ghost.state in ("chase", "scatter"):
                 ghost.state = "scared"
