@@ -65,6 +65,7 @@ while state != "quit":
         while running_game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    state = "quit"
                     running_game = False
 
                 elif event.type == pygame.KEYDOWN:
