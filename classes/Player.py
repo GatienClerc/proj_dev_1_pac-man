@@ -45,6 +45,7 @@ class Player:
         self.pixel_size = pixel_size
         self.tile_size = tile_size
         self.game_area = game_area
+        self.last_direction = 0
         self.direction = None
         self.buffered_direction = None
         self.speed = pixel_size
@@ -70,7 +71,7 @@ class Player:
         screen.blit(body, draw_position)
 
 
-    def move(self, board):
+    def move(self, board, ghosts):
         if self.direction is not None:
             dx, dy = DIRECTIONS[self.direction]
 
@@ -90,7 +91,9 @@ class Player:
         elif self.buffered_direction is not None:
             self.check_new_direction(board)
 
-        self.get_collectibles(board)
+        self.get_collectibles(board, ghosts)
+        
+        self.check_ghosts(ghosts)
 
 
     def wrap_position(self, board):
@@ -115,6 +118,7 @@ class Player:
             dx, dy = DIRECTIONS[self.buffered_direction]
             if not isinstance(board[self.grid_y + dy][self.grid_x + dx], Wall):
                 self.direction = self.buffered_direction
+                self.last_direction = self.buffered_direction
                 self.buffered_direction = None
 
 
@@ -124,13 +128,29 @@ class Player:
             self.direction = None
 
 
-    def get_collectibles(self, board):
+    def get_collectibles(self, board, ghosts):
         if not board[self.grid_y][self.grid_x].item_type: return
-        if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up()
+        if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up(ghosts)
 
         board[self.grid_y][self.grid_x].remove_item()
         self.score += dot_points
 
 
-    def power_up(self):
+    def power_up(self, ghosts):
         self.score += power_up
+        
+        for ghost in ghosts:
+            if ghost.state in ("chase", "scatter"):
+                ghost.state = "scared"
+                ghost.direction = (ghost.direction + 2) % 4
+
+
+    def check_ghosts(self, ghosts):
+        for ghost in ghosts:
+            if ghost.grid_x == self.grid_x and ghost.grid_y == self.grid_y:
+                if ghost.state != "dead":
+                    if ghost.state == "scared":
+                        ghost.state = "dead"
+                    else:
+                        #todo make the player die
+                        pass
