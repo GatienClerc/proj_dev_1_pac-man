@@ -58,7 +58,7 @@ while state != "quit":
         font = pygame.font.Font("assets/font/Pacfont.ttf",TILE_SIZE)
 
     elif state == "game":
-        board, player = game_innit(GAME, TILE_SIZE,PIXEL_SIZE)
+        board, player, ghosts = game_innit(GAME, TILE_SIZE,PIXEL_SIZE)
 
         running_game = True
 
@@ -68,6 +68,9 @@ while state != "quit":
                     running_game = False
 
                 elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        state = "menu"
+                        running_game = False
                     if event.key == pygame.K_UP or event.key == pygame.K_w:
                         player.buffered_direction = 2
                     elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -78,7 +81,7 @@ while state != "quit":
                         player.buffered_direction = 3
 
             screen.fill((0, 0, 0))
-            game_screen(screen, board, font, TILE_SIZE, player, ghost)
+            game_screen(screen, board, font, TILE_SIZE, player, ghosts)
             pygame.display.flip()
             clock.tick(60)
 pygame.quit()
