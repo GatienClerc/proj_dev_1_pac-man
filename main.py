@@ -5,7 +5,7 @@
 # Creation date:        08.09.2026
 # Modified by:          -
 # Modification date:    -
-# Version:              0.3
+# Version:              0.7
 #***********************************************************************************************************************
 import pygame
 from display.menu import menu
@@ -42,6 +42,10 @@ while state != "quit":
     if state == "menu":
         state = menu(screen, WIDTH, HEIGHT, font)
 
+    elif state == "win":
+        print("YOU WIN")
+        state = "menu"
+
     elif state == "setting":
         state, PIXEL_SIZE, volume = setting(screen, WIDTH, HEIGHT, font, PIXEL_SIZE, volume)
 
@@ -67,7 +71,6 @@ while state != "quit":
                 if event.type == pygame.QUIT:
                     state = "quit"
                     running_game = False
-
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         state = "menu"
@@ -80,6 +83,9 @@ while state != "quit":
                         player.buffered_direction = 0
                     elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         player.buffered_direction = 3
+            if player.dot_count <= 0:
+                state = "win"
+                running_game = False
 
             screen.fill((0, 0, 0))
             game_screen(screen, board, font, TILE_SIZE, player, ghosts)
