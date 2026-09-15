@@ -3,10 +3,11 @@
 # Description:          the game screen
 # Author:               Cédric Jankiewicz
 # Creation date:        23.08.2026
-# Modified by:          -
-# Modification date:    -
-# Version:              0.1
+# Modified by:          Gatien Clerc
+# Modification date:    10.09.26
+# Version:              0.5
 #***********************************************************************************************************************
+import pygame
 from utils.read_gamedata import read_gamedata
 from utils.wall_tileset import set_wall_image
 
@@ -15,7 +16,9 @@ def game_innit(game_area, tile_size, pixel_size):
     set_wall_image(board, pixel_size)
     return board, player
 
-def game_screen(screen, board, player):
+
+def game_screen(screen, board, font, tile_size, player):
+    draw_score(screen, font, player.score, tile_size)
     display_board(screen, board)
     display_player(screen, player, board)
 
@@ -27,3 +30,13 @@ def display_board(screen, board):
 def display_player(screen, player, board):
     player.move(board)
     player.draw(screen)
+
+def draw_score(screen, font, score, tile_size):
+    text_1up = font.render(f"1UP", True, ('white'))
+    screen.blit(text_1up, (tile_size * 3, 0))
+
+    text_2up = font.render(f"HIGH SCORE", True, ('white'))
+    screen.blit(text_2up, (tile_size * 9, 0))
+
+    text = font.render(f"{score}", True, ('white'))
+    screen.blit(text, (tile_size * 5, tile_size))

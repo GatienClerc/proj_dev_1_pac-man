@@ -24,6 +24,9 @@ DIRECTIONS = (
     (0, -1),    # North
     (-1, 0),    # West
 )
+
+dot_points = 10
+power_up = 40
 ########################################################################################################################
 # Class                                                                                                                #
 ########################################################################################################################
@@ -48,7 +51,7 @@ class Player:
         self.is_alive = True
         
         self.body = pygame.image.load("assets/sprites/player/pacman.png")
-
+        self.score = 0
 
     ### Methods ###
     def draw(self, screen):
@@ -126,7 +129,8 @@ class Player:
         if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up()
 
         board[self.grid_y][self.grid_x].remove_item()
+        self.score += dot_points
 
 
     def power_up(self):
-        pass
+        self.score += power_up
