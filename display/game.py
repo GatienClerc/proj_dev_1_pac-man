@@ -12,6 +12,7 @@ from utils.wall_tileset import set_wall_image
 
 global_ghosts_state = "scatter"
 global_ghosts_timer = 0
+global_ghosts_cycle_num = 0
 
 def game_innit(game_area, tile_size, pixel_size):
     board, player, ghosts = read_gamedata(tile_size, game_area, pixel_size)
@@ -44,16 +45,18 @@ def display_ghosts(screen, ghosts, board, player):
 
 
 def update_ghosts(ghosts):
-    global global_ghosts_state, global_ghosts_timer
+    global global_ghosts_state, global_ghosts_timer, global_ghosts_cycle_num
     global_ghosts_timer += 1
     
-    if global_ghosts_state == "scatter" and global_ghosts_timer > 7*60:
+    if global_ghosts_state == "scatter" and global_ghosts_timer > (7-global_ghosts_cycle_num)*60:
         global_ghosts_state = "chase"
         global_ghosts_timer = 0
         
     elif global_ghosts_state == "chase" and global_ghosts_timer > 20*60:
         global_ghosts_state = "scatter"
         global_ghosts_timer = 0
+        global_ghosts_cycle_num += 1
+        
     
     for ghost in ghosts:
         ghost.change_state_to(global_ghosts_state)
