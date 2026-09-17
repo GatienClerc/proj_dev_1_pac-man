@@ -100,4 +100,4 @@ def draw_score(screen, font, score, tile_size):
     screen.blit(text_2up, (tile_size * 9, 0))
 
     text = font.render(f"{score}", True, ('white'))
-    screen.blit(text, (tile_size * 5, tile_size))
+    screen.blit(text, (tile_size * 12, tile_size))
