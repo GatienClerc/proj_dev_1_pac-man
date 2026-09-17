@@ -37,6 +37,7 @@ ROTATIONS = {
 
 dot_points = 10
 power_up = 40
+ghost_points = 200
 ########################################################################################################################
 # Class                                                                                                                #
 ########################################################################################################################
@@ -183,6 +184,7 @@ class Player:
                 if ghost.state != "dead":
                     if ghost.state == "scared":
                         ghost.state = "dead"
+                        self.score += ghost_points
                     else:
                         #todo make the player die
                         pass
