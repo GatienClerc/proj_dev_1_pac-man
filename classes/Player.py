@@ -12,22 +12,31 @@
 ########################################################################################################################
 import pygame
 from classes.Wall import Wall
+from utils.spritesheet import spritesheet
 
 ########################################################################################################################
 # Constants
 ########################################################################################################################
 
 # Directions:
-# 0 = South
-# 1 = East
-# 2 = North
-# 3 = West
 DIRECTIONS = (
-    (0, 1),
-    (1, 0),
-    (0, -1),
-    (-1, 0),
+    (0, 1),     # South
+    (1, 0),     # East
+    (0, -1),    # North
+    (-1, 0),    # West
 )
+
+#direction -> rotation
+ROTATIONS = {
+    0 : 270,
+    1 : 0,
+    2 : 90,
+    3 : 180,
+}
+
+
+dot_points = 10
+power_up = 40
 ########################################################################################################################
 # Class                                                                                                                #
 ########################################################################################################################
@@ -54,10 +63,13 @@ class Player:
         self.speed = pixel_size
         self.is_alive = True
         
-        self.powered_up = False
+        # animation
+        self.body = spritesheet("assets/sprites/player/pacman_move.png", 1, 4, 14, 14)
+        self.animation_frame = 0
+        self.animation_delay = 5
+        self.animation_delay_count = 0
         
-        self.body = pygame.image.load("assets/sprites/player/pacman.png")
-
+        self.score = 0
 
     ### Methods ###
     def draw(self, screen):
@@ -70,10 +82,27 @@ class Player:
 
         # Draw body unless the ghost is dead
         body = pygame.transform.scale_by(
-            self.body,
+            self.body[self.animation_frame],
             self.pixel_size,
         )
+        body = pygame.transform.rotate(body, ROTATIONS[self.last_direction])
+        
         screen.blit(body, draw_position)
+        
+        if self.direction is not None:
+            self.update_animation()
+
+
+    def update_animation(self):
+        """Update the player animation."""
+
+        self.animation_delay_count += 1
+
+        if self.animation_delay_count < self.animation_delay:
+            return
+
+        self.animation_delay_count = 0
+        self.animation_frame = (self.animation_frame + 1) % len(self.body)
 
 
     def move(self, board, ghosts):
@@ -138,10 +167,12 @@ class Player:
         if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up(ghosts)
 
         board[self.grid_y][self.grid_x].remove_item()
+        self.score += dot_points
 
 
     def power_up(self, ghosts):
-        self.powered_up = True
+        self.score += power_up
+        
         for ghost in ghosts:
             if ghost.state in ("chase", "scatter"):
                 ghost.state = "scared"

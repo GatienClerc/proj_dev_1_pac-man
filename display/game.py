@@ -3,16 +3,18 @@
 # Description:          the game screen
 # Author:               Cédric Jankiewicz
 # Creation date:        23.08.2026
-# Modified by:          -
-# Modification date:    -
-# Version:              0.1
+# Modified by:          Gatien Clerc
+# Modification date:    10.09.26
+# Version:              0.5
 #***********************************************************************************************************************
+import pygame
 from utils.read_gamedata import read_gamedata
 from utils.wall_tileset import set_wall_image
 
 global_ghosts_state = "scatter"
 global_ghosts_timer = 0
-global_ghosts_cycle_num = 0
+global_ghosts_cycle = 0
+state_time = [7,20,7,20,5,20,5]
 
 def game_innit(game_area, tile_size, pixel_size):
     board, player, ghosts = read_gamedata(tile_size, game_area, pixel_size)
@@ -20,7 +22,8 @@ def game_innit(game_area, tile_size, pixel_size):
     return board, player, ghosts
 
 
-def game_screen(screen, board, player, ghosts):
+def game_screen(screen, board, font, tile_size, player, ghosts):
+    draw_score(screen, font, player.score, tile_size)
     display_board(screen, board)
     display_player(screen, player, board, ghosts)
     display_ghosts(screen, ghosts, board, player)
@@ -45,19 +48,26 @@ def display_ghosts(screen, ghosts, board, player):
 
 
 def update_ghosts(ghosts):
-    global global_ghosts_state, global_ghosts_timer, global_ghosts_cycle_num
-    global_ghosts_timer += 1
+    global global_ghosts_state
+    global global_ghosts_timer
+    global global_ghosts_cycle
     
-    if global_ghosts_state == "scatter" and global_ghosts_timer > (7-global_ghosts_cycle_num)*60:
+    # stop cycling after finishing the cycles
+    if global_ghosts_cycle < len(state_time):
+        global_ghosts_timer += 1
+
+        if global_ghosts_timer >= state_time[global_ghosts_cycle] * 60:
+            global_ghosts_timer = 0
+            global_ghosts_cycle += 1
+
+            if global_ghosts_state == "scatter":
+                global_ghosts_state = "chase"
+            else:
+                global_ghosts_state = "scatter"
+
+    else:
         global_ghosts_state = "chase"
-        global_ghosts_timer = 0
-        
-    elif global_ghosts_state == "chase" and global_ghosts_timer > 20*60:
-        global_ghosts_state = "scatter"
-        global_ghosts_timer = 0
-        global_ghosts_cycle_num += 1
-        
-    
+
     for ghost in ghosts:
         ghost.change_state_to(global_ghosts_state)
 
@@ -73,3 +83,14 @@ def reset_entities(player, ghosts):
     global_ghosts_state = "scatter"
     global_ghosts_timer = 0
     global_ghosts_cycle_num = 0
+    
+    
+def draw_score(screen, font, score, tile_size):
+    text_1up = font.render(f"1UP", True, ('white'))
+    screen.blit(text_1up, (tile_size * 3, 0))
+
+    text_2up = font.render(f"HIGH SCORE", True, ('white'))
+    screen.blit(text_2up, (tile_size * 9, 0))
+
+    text = font.render(f"{score}", True, ('white'))
+    screen.blit(text, (tile_size * 5, tile_size))
