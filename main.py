@@ -11,6 +11,7 @@ import pygame
 from display.menu import menu
 from display.setting import setting
 from display.game import game_innit, game_screen
+from display.win import win
 from utils.save import load
 
 pygame.init()
@@ -43,8 +44,9 @@ while state != "quit":
         state = menu(screen, WIDTH, HEIGHT, font)
 
     elif state == "win":
+        state = win(screen, WIDTH, HEIGHT, font)
         print("YOU WIN")
-        state = "menu"
+        #state = "menu"
 
     elif state == "setting":
         state, PIXEL_SIZE, volume = setting(screen, WIDTH, HEIGHT, font, PIXEL_SIZE, volume)
