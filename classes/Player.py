@@ -37,10 +37,12 @@ class Player:
         # Tile position
         self.grid_x = pos_x
         self.grid_y = pos_y
+        self.respawn_position = [self.grid_x, self.grid_y]
 
         # Pixel position
         self.x = (pos_x+0.5) * tile_size
         self.y = pos_y * tile_size
+        self.respawn_point = [self.x, self.y]
 
         # Movement
         self.pixel_size = pixel_size
@@ -153,5 +155,13 @@ class Player:
                     if ghost.state == "scared":
                         ghost.state = "dead"
                     else:
-                        #todo make the player die
-                        pass
+                        self.is_alive = False
+
+
+    def respawn_player(self):
+        self.grid_x, self.grid_y = self.respawn_position[0], self.respawn_position[1]
+        self.x, self.y = self.respawn_point[0], self.respawn_point[1]
+        self.last_direction = 0
+        self.direction = None
+        self.buffered_direction = None
+        self.is_alive = True

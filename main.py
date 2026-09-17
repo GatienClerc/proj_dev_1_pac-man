@@ -1,5 +1,5 @@
 import pygame
-from display.game import game_screen, game_innit
+from display.game import game_screen, game_innit, reset_entities
 
 pygame.init()
 
@@ -16,7 +16,7 @@ clock = pygame.time.Clock()
 running = True
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-board, player, ghost = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
+board, player, ghosts = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
 
 while running:
     for event in pygame.event.get():
@@ -36,8 +36,10 @@ while running:
     pygame.display.flip()
 
     screen.fill((0,0,0))
-    game_screen(screen, board, player, ghost)
+    game_screen(screen, board, player, ghosts)
     pygame.display.flip()
+
+    if not player.is_alive: reset_entities(player, ghosts)
 
     clock.tick(60)
 
