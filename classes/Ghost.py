@@ -48,8 +48,8 @@ GET_OUT = "get_out"
 WAIT = "wait"
 
 # Ghost house positions
-GHOST_HOME_IN = (13, 11)
-GHOST_HOUSE_OUT = (13, 14)
+GHOST_HOME_IN = [13, 11]
+GHOST_HOUSE_OUT = [13, 14]
 
 #speed multiplier
 SPEED_WAIT = 0
@@ -173,7 +173,7 @@ class Ghost:
             screen.blit(eyes, draw_position)
 
         self.update_animation()
-        """
+        
         #show target debug
         draw_position = (
             self.target[0]*self.tile_size - offset,
@@ -184,7 +184,7 @@ class Ghost:
             self.pixel_size,
         )
         screen.blit(body, draw_position)
-        """
+        
 
     def update_animation(self):
         """Update the ghost animation."""
@@ -329,20 +329,20 @@ class Ghost:
 
         elif self.state == DEAD:
             self.speed = self.pixel_size * SPEED_DEAD
-            self.target = list(GHOST_HOME_IN)
+            self.target = GHOST_HOME_IN
 
-            if (self.grid_x, self.grid_y) == GHOST_HOME_IN:
+            if [self.grid_x, self.grid_y] == GHOST_HOME_IN:
                 self.state = GET_IN
 
         elif self.state == GET_IN:
-            self.target = list(GHOST_HOUSE_OUT)
+            self.target = GHOST_HOUSE_OUT
 
             if (self.grid_x, self.grid_y) == GHOST_HOUSE_OUT:
                 self.state = GET_OUT
 
         elif self.state == GET_OUT:
             self.speed = self.pixel_size * SPEED_NORMAL
-            self.target = list(GHOST_HOME_IN)
+            self.target = GHOST_HOME_IN
 
             if self.grid_y <= GHOST_HOME_IN[1]:
                 self.state = SCATTER
