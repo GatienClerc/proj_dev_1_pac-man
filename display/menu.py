@@ -46,8 +46,7 @@ def menu(screen, width, height, font):
                 return "quit"
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn_play.collidepoint(event.pos):
-                    # return "game"
-                    return "win"
+                    return "game"
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn_setting.collidepoint(event.pos):
