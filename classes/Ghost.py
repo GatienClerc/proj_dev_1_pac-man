@@ -173,7 +173,7 @@ class Ghost:
             screen.blit(eyes, draw_position)
 
         self.update_animation()
-        
+        """
         #show target debug
         draw_position = (
             self.target[0]*self.tile_size - offset,
@@ -184,6 +184,7 @@ class Ghost:
             self.pixel_size,
         )
         screen.blit(body, draw_position)
+        """
         
 
     def update_animation(self):
@@ -209,6 +210,22 @@ class Ghost:
 
     def move(self, board, player):
         """Move the ghost and update its direction when reaching a tile center."""
+        if self.state == GET_IN:
+            self.x = (GHOST_HOUSE_OUT[0]+0.5) * self.tile_size
+            self.y += self.pixel_size * SPEED_NORMAL
+            if self.y >= GHOST_HOUSE_OUT[1] * self.tile_size:
+                self.y = GHOST_HOUSE_OUT[1] * self.tile_size
+                self.state = GET_OUT
+            return
+
+        if self.state == GET_OUT:
+            self.x = (GHOST_HOME_IN[0]+0.5) * self.tile_size
+            self.y -= self.pixel_size * SPEED_NORMAL
+            if self.y <= GHOST_HOME_IN[1] * self.tile_size:
+                self.y = GHOST_HOME_IN[1] * self.tile_size
+                self.state = SCATTER
+            return
+
         if self.state == WAIT:
             self.wait_timer +=1
             if self.wait_timer >= self.wait_time:
