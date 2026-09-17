@@ -4,12 +4,12 @@
 # Author:               Cédric Jankiewicz
 # Creation date:        23.08.2026
 # Modified by:          Gatien Clerc
-# Modification date:    10.09.26
-# Version:              0.5
+# Modification date:    15.09.26
+# Version:              1.0
 #***********************************************************************************************************************
-import pygame
 from utils.read_gamedata import read_gamedata
 from utils.wall_tileset import set_wall_image
+from classes.Ground import Ground
 
 global_ghosts_state = "scatter"
 global_ghosts_timer = 0
@@ -19,6 +19,13 @@ state_time = [7,20,7,20,5,20,5]
 def game_innit(game_area, tile_size, pixel_size):
     board, player, ghosts = read_gamedata(tile_size, game_area, pixel_size)
     set_wall_image(board, pixel_size)
+
+    for row in board:
+        for tile in row:
+            if isinstance(tile, Ground) :
+                if tile.item_type in ("Dot", "Power Up"):
+                    player.dot_count += 1
+
     return board, player, ghosts
 
 
@@ -71,6 +78,20 @@ def update_ghosts(ghosts):
     for ghost in ghosts:
         ghost.change_state_to(global_ghosts_state)
 
+
+def reset_entities(player, ghosts):
+    global global_ghosts_state, global_ghosts_timer, global_ghosts_cycle_num
+    player.respawn_player()
+
+    for ghost in ghosts:
+        ghost.reset_ghost()
+        ghost.reset_red_state()
+
+    global_ghosts_state = "scatter"
+    global_ghosts_timer = 0
+    global_ghosts_cycle_num = 0
+    
+    
 def draw_score(screen, font, score, tile_size):
     text_1up = font.render(f"1UP", True, ('white'))
     screen.blit(text_1up, (tile_size * 3, 0))

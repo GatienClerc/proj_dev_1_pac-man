@@ -3,9 +3,9 @@
 # Description:          Class for the Player object that the user will control
 # Author:               Thierry Perroud
 # Creation date:        20.08.2026
-# Modified by:          Thierry Perroud
-# Modification date:    08.09.2026
-# Version:              0.3
+# Modified by:          Gatien Clerc
+# Modification date:    15.09.2026
+# Version:              0.5
 #***********************************************************************************************************************
 ########################################################################################################################
 # Imports                                                                                                              #
@@ -47,10 +47,12 @@ class Player:
         # Tile position
         self.grid_x = pos_x
         self.grid_y = pos_y
+        self.respawn_position = [self.grid_x, self.grid_y]
 
         # Pixel position
         self.x = (pos_x+0.5) * tile_size
         self.y = pos_y * tile_size
+        self.respawn_point = [self.x, self.y]
 
         # Movement
         self.pixel_size = pixel_size
@@ -69,6 +71,7 @@ class Player:
         self.animation_delay_count = 0
         
         self.score = 0
+        self.dot_count = 0
 
     ### Methods ###
     def draw(self, screen):
@@ -166,6 +169,7 @@ class Player:
         if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up(ghosts)
 
         board[self.grid_y][self.grid_x].remove_item()
+        self.dot_count -= 1
         self.score += dot_points
 
 
@@ -186,5 +190,13 @@ class Player:
                         ghost.state = "dead"
                         self.score += ghost_points
                     else:
-                        #todo make the player die
-                        pass
+                        self.is_alive = False
+
+
+    def respawn_player(self):
+        self.grid_x, self.grid_y = self.respawn_position[0], self.respawn_position[1]
+        self.x, self.y = self.respawn_point[0], self.respawn_point[1]
+        self.last_direction = 0
+        self.direction = None
+        self.buffered_direction = None
+        self.is_alive = True

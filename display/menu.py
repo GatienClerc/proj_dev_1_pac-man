@@ -5,7 +5,7 @@
 # Creation date:        08.09.2026
 # Modified by:          -
 # Modification date:    -
-# Version:              0.2
+# Version:              0.6
 #***********************************************************************************************************************
 import pygame
 
@@ -46,7 +46,8 @@ def menu(screen, width, height, font):
                 return "quit"
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn_play.collidepoint(event.pos):
-                    return "game"
+                    # return "game"
+                    return "win"
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn_setting.collidepoint(event.pos):
