@@ -10,7 +10,7 @@
 import pygame
 from display.menu import menu
 from display.setting import setting
-from display.game import game_innit, game_screen
+from display.game import game_innit, game_screen, reset_entities
 from utils.save import load
 
 pygame.init()
@@ -36,7 +36,7 @@ state = menu(screen, WIDTH, HEIGHT, font)
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-board, player, ghost = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
+board, player, ghosts = game_innit(GAME, TILE_SIZE, PIXEL_SIZE)
 
 while state != "quit":
     if state == "menu":
@@ -81,8 +81,13 @@ while state != "quit":
                     elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         player.buffered_direction = 3
 
+            
+
             screen.fill((0, 0, 0))
             game_screen(screen, board, font, TILE_SIZE, player, ghosts)
             pygame.display.flip()
+        
+            if not player.is_alive: reset_entities(player, ghosts)
+            
             clock.tick(60)
 pygame.quit()

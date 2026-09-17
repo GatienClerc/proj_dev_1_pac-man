@@ -21,3 +21,7 @@ class RedGhost(Ghost):
 
     def chase(self, player):
         return [player.grid_x, player.grid_y]
+
+    def reset_red_state(self):
+        self.state = "scatter"
+        self.speed = self.pixel_size * 0.9

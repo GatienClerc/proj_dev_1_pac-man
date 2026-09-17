@@ -76,10 +76,12 @@ class Ghost:
         # Tile position
         self.grid_x = pos_x
         self.grid_y = pos_y
+        self.respawn_position = [self.grid_x, self.grid_y]
 
         # Pixel position
         self.x = (pos_x+0.5) * tile_size
         self.y = pos_y * tile_size
+        self.respawn_point = [self.x, self.y]
 
         # Movement
         self.pixel_size = pixel_size
@@ -415,3 +417,27 @@ class Ghost:
 
         self.state = new_state
         self.direction = (self.direction + 2) % 4
+
+
+    def reset_ghost(self):
+        self.grid_x, self.grid_y = self.respawn_position[0], self.respawn_position[1]
+        self.x, self.y = self.respawn_point[0], self.respawn_point[1]
+        self.direction = 1
+        self.speed = SPEED_WAIT
+        self.is_alive = True
+
+        # AI
+        self.state = WAIT
+        self.target = [0, 0]
+        self.wait_timer = 0
+
+        self.scared_timer = 0
+
+        # Animation
+        self.animation_frame = 0
+        self.animation_delay = 20
+        self.animation_delay_count = 0
+
+
+    def reset_red_state(self):
+        pass
