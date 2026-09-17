@@ -48,8 +48,8 @@ GET_OUT = "get_out"
 WAIT = "wait"
 
 # Ghost house positions
-GHOST_HOME_IN = (13, 11)
-GHOST_HOUSE_OUT = (13, 14)
+GHOST_HOME_IN = [13, 11]
+GHOST_HOUSE_OUT = [13, 14]
 
 #speed multiplier
 SPEED_WAIT = 0
@@ -185,6 +185,7 @@ class Ghost:
         )
         screen.blit(body, draw_position)
         """
+        
 
     def update_animation(self):
         """Update the ghost animation."""
@@ -209,6 +210,22 @@ class Ghost:
 
     def move(self, board, player):
         """Move the ghost and update its direction when reaching a tile center."""
+        if self.state == GET_IN:
+            self.x = (GHOST_HOUSE_OUT[0]+0.5) * self.tile_size
+            self.y += self.pixel_size * SPEED_NORMAL
+            if self.y >= GHOST_HOUSE_OUT[1] * self.tile_size:
+                self.y = GHOST_HOUSE_OUT[1] * self.tile_size
+                self.state = GET_OUT
+            return
+
+        if self.state == GET_OUT:
+            self.x = (GHOST_HOME_IN[0]+0.5) * self.tile_size
+            self.y -= self.pixel_size * SPEED_NORMAL
+            if self.y <= GHOST_HOME_IN[1] * self.tile_size:
+                self.y = GHOST_HOME_IN[1] * self.tile_size
+                self.state = SCATTER
+            return
+
         if self.state == WAIT:
             self.wait_timer +=1
             if self.wait_timer >= self.wait_time:
@@ -329,20 +346,20 @@ class Ghost:
 
         elif self.state == DEAD:
             self.speed = self.pixel_size * SPEED_DEAD
-            self.target = list(GHOST_HOME_IN)
+            self.target = GHOST_HOME_IN
 
-            if (self.grid_x, self.grid_y) == GHOST_HOME_IN:
+            if [self.grid_x, self.grid_y] == GHOST_HOME_IN:
                 self.state = GET_IN
 
         elif self.state == GET_IN:
-            self.target = list(GHOST_HOUSE_OUT)
+            self.target = GHOST_HOUSE_OUT
 
             if (self.grid_x, self.grid_y) == GHOST_HOUSE_OUT:
                 self.state = GET_OUT
 
         elif self.state == GET_OUT:
             self.speed = self.pixel_size * SPEED_NORMAL
-            self.target = list(GHOST_HOME_IN)
+            self.target = GHOST_HOME_IN
 
             if self.grid_y <= GHOST_HOME_IN[1]:
                 self.state = SCATTER
