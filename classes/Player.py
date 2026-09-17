@@ -3,9 +3,9 @@
 # Description:          Class for the Player object that the user will control
 # Author:               Thierry Perroud
 # Creation date:        20.08.2026
-# Modified by:          Thierry Perroud
-# Modification date:    08.09.2026
-# Version:              0.3
+# Modified by:          Gatien Clerc
+# Modification date:    15.09.2026
+# Version:              0.5
 #***********************************************************************************************************************
 ########################################################################################################################
 # Imports                                                                                                              #
@@ -70,6 +70,7 @@ class Player:
         self.animation_delay_count = 0
         
         self.score = 0
+        self.dot_count = 0
 
     ### Methods ###
     def draw(self, screen):
@@ -167,6 +168,7 @@ class Player:
         if board[self.grid_y][self.grid_x].item_type == "Power Up": self.power_up(ghosts)
 
         board[self.grid_y][self.grid_x].remove_item()
+        self.dot_count -= 1
         self.score += dot_points
 
 

@@ -25,7 +25,7 @@ def read_gamedata(tile_size, game_area, pixel_size):
     :param pixel_size: the size of a pixel
     :return: the gameboard
     """
-    file_path = "gamedata/board.txt"
+    file_path = "gamedata/board.data"
     board = []
     player = None
     ghosts = []
