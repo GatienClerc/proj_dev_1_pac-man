@@ -78,6 +78,20 @@ def update_ghosts(ghosts):
     for ghost in ghosts:
         ghost.change_state_to(global_ghosts_state)
 
+
+def reset_entities(player, ghosts):
+    global global_ghosts_state, global_ghosts_timer, global_ghosts_cycle_num
+    player.respawn_player()
+
+    for ghost in ghosts:
+        ghost.reset_ghost()
+        ghost.reset_red_state()
+
+    global_ghosts_state = "scatter"
+    global_ghosts_timer = 0
+    global_ghosts_cycle_num = 0
+    
+    
 def draw_score(screen, font, score, tile_size):
     text_1up = font.render(f"1UP", True, ('white'))
     screen.blit(text_1up, (tile_size * 3, 0))

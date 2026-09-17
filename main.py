@@ -10,8 +10,8 @@
 import pygame
 from display.menu import menu
 from display.setting import setting
-from display.game import game_innit, game_screen
 from display.win import win
+from display.game import game_innit, game_screen, reset_entities
 from utils.save import load
 
 pygame.init()
@@ -88,8 +88,13 @@ while state != "quit":
                 running_game = False
                 score = player.score
 
+            
+
             screen.fill((0, 0, 0))
             game_screen(screen, board, font, TILE_SIZE, player, ghosts)
             pygame.display.flip()
+        
+            if not player.is_alive: reset_entities(player, ghosts)
+            
             clock.tick(60)
 pygame.quit()

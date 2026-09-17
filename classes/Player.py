@@ -12,6 +12,7 @@
 ########################################################################################################################
 import pygame
 from classes.Wall import Wall
+from utils.spritesheet import spritesheet
 
 ########################################################################################################################
 # Constants
@@ -25,6 +26,15 @@ DIRECTIONS = (
     (-1, 0),    # West
 )
 
+#direction -> rotation
+ROTATIONS = {
+    0 : 270,
+    1 : 0,
+    2 : 90,
+    3 : 180,
+}
+
+
 dot_points = 10
 power_up = 40
 ########################################################################################################################
@@ -36,10 +46,12 @@ class Player:
         # Tile position
         self.grid_x = pos_x
         self.grid_y = pos_y
+        self.respawn_position = [self.grid_x, self.grid_y]
 
         # Pixel position
         self.x = (pos_x+0.5) * tile_size
         self.y = pos_y * tile_size
+        self.respawn_point = [self.x, self.y]
 
         # Movement
         self.pixel_size = pixel_size
@@ -51,7 +63,12 @@ class Player:
         self.speed = pixel_size
         self.is_alive = True
         
-        self.body = pygame.image.load("assets/sprites/player/pacman.png")
+        # animation
+        self.body = spritesheet("assets/sprites/player/pacman_move.png", 1, 4, 14, 14)
+        self.animation_frame = 0
+        self.animation_delay = 5
+        self.animation_delay_count = 0
+        
         self.score = 0
         self.dot_count = 0
 
@@ -66,10 +83,27 @@ class Player:
 
         # Draw body unless the ghost is dead
         body = pygame.transform.scale_by(
-            self.body,
+            self.body[self.animation_frame],
             self.pixel_size,
         )
+        body = pygame.transform.rotate(body, ROTATIONS[self.last_direction])
+        
         screen.blit(body, draw_position)
+        
+        if self.direction is not None:
+            self.update_animation()
+
+
+    def update_animation(self):
+        """Update the player animation."""
+
+        self.animation_delay_count += 1
+
+        if self.animation_delay_count < self.animation_delay:
+            return
+
+        self.animation_delay_count = 0
+        self.animation_frame = (self.animation_frame + 1) % len(self.body)
 
 
     def move(self, board, ghosts):
@@ -154,5 +188,13 @@ class Player:
                     if ghost.state == "scared":
                         ghost.state = "dead"
                     else:
-                        #todo make the player die
-                        pass
+                        self.is_alive = False
+
+
+    def respawn_player(self):
+        self.grid_x, self.grid_y = self.respawn_position[0], self.respawn_position[1]
+        self.x, self.y = self.respawn_point[0], self.respawn_point[1]
+        self.last_direction = 0
+        self.direction = None
+        self.buffered_direction = None
+        self.is_alive = True

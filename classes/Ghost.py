@@ -48,8 +48,8 @@ GET_OUT = "get_out"
 WAIT = "wait"
 
 # Ghost house positions
-GHOST_HOME_IN = (13, 11)
-GHOST_HOUSE_OUT = (13, 14)
+GHOST_HOME_IN = [13, 11]
+GHOST_HOUSE_OUT = [13, 14]
 
 #speed multiplier
 SPEED_WAIT = 0
@@ -76,10 +76,12 @@ class Ghost:
         # Tile position
         self.grid_x = pos_x
         self.grid_y = pos_y
+        self.respawn_position = [self.grid_x, self.grid_y]
 
         # Pixel position
         self.x = (pos_x+0.5) * tile_size
         self.y = pos_y * tile_size
+        self.respawn_point = [self.x, self.y]
 
         # Movement
         self.pixel_size = pixel_size
@@ -185,6 +187,7 @@ class Ghost:
         )
         screen.blit(body, draw_position)
         """
+        
 
     def update_animation(self):
         """Update the ghost animation."""
@@ -209,6 +212,22 @@ class Ghost:
 
     def move(self, board, player):
         """Move the ghost and update its direction when reaching a tile center."""
+        if self.state == GET_IN:
+            self.x = (GHOST_HOUSE_OUT[0]+0.5) * self.tile_size
+            self.y += self.pixel_size * SPEED_NORMAL
+            if self.y >= GHOST_HOUSE_OUT[1] * self.tile_size:
+                self.y = GHOST_HOUSE_OUT[1] * self.tile_size
+                self.state = GET_OUT
+            return
+
+        if self.state == GET_OUT:
+            self.x = (GHOST_HOME_IN[0]+0.5) * self.tile_size
+            self.y -= self.pixel_size * SPEED_NORMAL
+            if self.y <= GHOST_HOME_IN[1] * self.tile_size:
+                self.y = GHOST_HOME_IN[1] * self.tile_size
+                self.state = SCATTER
+            return
+
         if self.state == WAIT:
             self.wait_timer +=1
             if self.wait_timer >= self.wait_time:
@@ -329,20 +348,20 @@ class Ghost:
 
         elif self.state == DEAD:
             self.speed = self.pixel_size * SPEED_DEAD
-            self.target = list(GHOST_HOME_IN)
+            self.target = GHOST_HOME_IN
 
-            if (self.grid_x, self.grid_y) == GHOST_HOME_IN:
+            if [self.grid_x, self.grid_y] == GHOST_HOME_IN:
                 self.state = GET_IN
 
         elif self.state == GET_IN:
-            self.target = list(GHOST_HOUSE_OUT)
+            self.target = GHOST_HOUSE_OUT
 
             if (self.grid_x, self.grid_y) == GHOST_HOUSE_OUT:
                 self.state = GET_OUT
 
         elif self.state == GET_OUT:
             self.speed = self.pixel_size * SPEED_NORMAL
-            self.target = list(GHOST_HOME_IN)
+            self.target = GHOST_HOME_IN
 
             if self.grid_y <= GHOST_HOME_IN[1]:
                 self.state = SCATTER
@@ -398,3 +417,27 @@ class Ghost:
 
         self.state = new_state
         self.direction = (self.direction + 2) % 4
+
+
+    def reset_ghost(self):
+        self.grid_x, self.grid_y = self.respawn_position[0], self.respawn_position[1]
+        self.x, self.y = self.respawn_point[0], self.respawn_point[1]
+        self.direction = 1
+        self.speed = SPEED_WAIT
+        self.is_alive = True
+
+        # AI
+        self.state = WAIT
+        self.target = [0, 0]
+        self.wait_timer = 0
+
+        self.scared_timer = 0
+
+        # Animation
+        self.animation_frame = 0
+        self.animation_delay = 20
+        self.animation_delay_count = 0
+
+
+    def reset_red_state(self):
+        pass
