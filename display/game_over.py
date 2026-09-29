@@ -1,8 +1,8 @@
 #***********************************************************************************************************************
 # Program name:         game_over.py
 # Description:          Game Over screen
-# Author:               Gatien Clerc
-# Creation date:        17.09.2026
+# Author:               Thierry Perroud
+# Creation date:        29.09.2026
 # Modified by:          -
 # Modification date:    -
 # Version:              0.1
