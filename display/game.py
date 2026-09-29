@@ -16,6 +16,9 @@ global_ghosts_timer = 0
 global_ghosts_cycle = 0
 state_time = [7,20,7,20,5,20,5]
 
+ready_time = 2*60
+ready_timer = 0
+
 def game_innit(game_area, tile_size, pixel_size):
     board, player, ghosts = read_gamedata(tile_size, game_area, pixel_size)
     set_wall_image(board, pixel_size)
@@ -30,28 +33,36 @@ def game_innit(game_area, tile_size, pixel_size):
 
 
 def game_screen(screen, board, font, tile_size, player, ghosts):
+    global ready_timer
+    if ready_timer >= ready_time: 
+        #logic
+        player.move(board, ghosts)
+        
+        for ghost in ghosts:
+            ghost.move(board, player)
+        update_ghosts(ghosts)
+        
+    else:
+        #ready and timer
+        ready_timer += 1
+        text_ready = font.render(f"READY!", True, ('yellow'))
+        text_rect = text_ready.get_rect(center=(tile_size * 14, tile_size * 20.5))
+        screen.blit(text_ready, text_rect)
+    
+    #draw
+    draw_board(screen, board)
     draw_score(screen, font, player.score, tile_size)
-    display_board(screen, board)
-    display_player(screen, player, board, ghosts)
-    display_ghosts(screen, ghosts, board, player)
-    update_ghosts(ghosts)
+    
+    player.draw(screen)
+    
+    for ghost in ghosts:
+        ghost.draw(screen)
 
 
-def display_board(screen, board):
+def draw_board(screen, board):
     for col in board:
         for tile in col:
             tile.draw(screen)
-
-
-def display_player(screen, player, board, ghosts):
-    player.move(board, ghosts)
-    player.draw(screen)
-
-
-def display_ghosts(screen, ghosts, board, player):  
-    for ghost in ghosts:
-        ghost.draw(screen)
-        ghost.move(board, player)
 
 
 def update_ghosts(ghosts):
@@ -80,7 +91,7 @@ def update_ghosts(ghosts):
 
 
 def reset_entities(player, ghosts):
-    global global_ghosts_state, global_ghosts_timer, global_ghosts_cycle_num
+    global global_ghosts_state, global_ghosts_timer, global_ghosts_cycle_num, ready_timer
     player.respawn_player()
 
     for ghost in ghosts:
@@ -90,6 +101,8 @@ def reset_entities(player, ghosts):
     global_ghosts_state = "scatter"
     global_ghosts_timer = 0
     global_ghosts_cycle_num = 0
+    
+    ready_timer = 0
     
     
 def draw_score(screen, font, score, tile_size):
