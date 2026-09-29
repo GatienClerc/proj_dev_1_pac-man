@@ -51,7 +51,7 @@ def game_screen(screen, board, font, tile_size, player, ghosts):
     
     #draw
     draw_board(screen, board)
-    draw_score(screen, font, player.score, tile_size)
+    draw_score(screen, font, player.life_count, player.score, tile_size)
     
     player.draw(screen)
     
@@ -105,8 +105,8 @@ def reset_entities(player, ghosts):
     ready_timer = 0
     
     
-def draw_score(screen, font, score, tile_size):
-    text_1up = font.render(f"1UP", True, ('white'))
+def draw_score(screen, font,life_count, score, tile_size):
+    text_1up = font.render(f"{life_count}UP", True, ('white'))
     screen.blit(text_1up, (tile_size * 3, 0))
 
     text_2up = font.render(f"HIGH SCORE", True, ('white'))

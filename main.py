@@ -12,6 +12,7 @@ from display.menu import menu
 from display.setting import setting
 from display.win import win
 from display.game import game_innit, game_screen, reset_entities
+from display.game_over import game_over
 from utils.save import load
 
 pygame.init()
@@ -45,6 +46,9 @@ while state != "quit":
 
     elif state == "win":
         state = win(screen, WIDTH, HEIGHT, font, score)
+
+    elif state == "game over":
+        state = game_over(screen, WIDTH, HEIGHT, font, score)
 
     elif state == "setting":
         state, PIXEL_SIZE, volume = setting(screen, WIDTH, HEIGHT, font, PIXEL_SIZE, volume)
@@ -94,7 +98,17 @@ while state != "quit":
             game_screen(screen, board, font, TILE_SIZE, player, ghosts)
             pygame.display.flip()
         
-            if not player.is_alive: reset_entities(player, ghosts)
+            if not player.is_alive:
+                if player.life_count == 0:
+                    state = "game over"
+                    running_game = False
+                    score = player.score
+
+                else:
+                    player.life_count -= 1
+                    reset_entities(player, ghosts)
+
+
             
             clock.tick(60)
 pygame.quit()
