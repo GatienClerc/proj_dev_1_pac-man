@@ -29,6 +29,11 @@ def menu(screen, width, height, font):
     while running:
         screen.fill((0,0,0))
 
+        pacman= font.render(f"Pac-Man", True, ('yellow'))
+        pacman = pygame.transform.scale_by(pacman, 3)
+        pacman_rect = pacman.get_rect(center=(width // 2, height // 5))
+        screen.blit(pacman, pacman_rect)
+
         pygame.draw.rect(screen, (255, 255, 255), btn_play)
         text_play = font.render("Play", True, (0, 0, 0))
         screen.blit(text_play, text_play.get_rect(center=btn_play.center))

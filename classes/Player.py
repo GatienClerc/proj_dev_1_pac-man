@@ -201,3 +201,4 @@ class Player:
         self.direction = None
         self.buffered_direction = None
         self.is_alive = True
+        self.animation_frame = 0
