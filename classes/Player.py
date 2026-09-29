@@ -69,7 +69,8 @@ class Player:
         self.animation_frame = 0
         self.animation_delay = 5
         self.animation_delay_count = 0
-        
+
+        self.life_count = 2
         self.score = 0
         self.dot_count = 0
 
