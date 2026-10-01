@@ -207,8 +207,9 @@ class Player:
         self.score += power_up
         
         for ghost in ghosts:
-            if ghost.state in ("chase", "scatter"):
+            if ghost.state in ("chase", "scatter", "scared"):
                 ghost.state = "scared"
+                ghost.scared_timer = 0
                 ghost.direction = (ghost.direction + 2) % 4
 
 
