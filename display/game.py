@@ -34,29 +34,32 @@ def game_innit(game_area, tile_size, pixel_size):
 
 def game_screen(screen, board, font, tile_size, player, ghosts):
     global ready_timer
-    if ready_timer >= ready_time: 
-        #logic
-        player.move(board, ghosts)
-        
-        for ghost in ghosts:
-            ghost.move(board, player)
-        update_ghosts(ghosts)
-        
-    else:
-        #ready and timer
-        ready_timer += 1
-        text_ready = font.render(f"READY!", True, ('yellow'))
-        text_rect = text_ready.get_rect(center=(tile_size * 14, tile_size * 20.5))
-        screen.blit(text_ready, text_rect)
-    
-    #draw
+
+    # draw
     draw_board(screen, board)
     draw_score(screen, font, player.life_count, player.score, tile_size)
     
+    if not player.is_dying:
+        
+        for ghost in ghosts:
+            ghost.draw(screen)
+        
+        if ready_timer >= ready_time: 
+            #logic
+            player.move(board, ghosts)
+            
+            for ghost in ghosts:
+                ghost.move(board, player)
+            update_ghosts(ghosts)
+            
+        else:
+            #ready and timer
+            ready_timer += 1
+            text_ready = font.render(f"READY!", True, ('yellow'))
+            text_rect = text_ready.get_rect(center=(tile_size * 14, tile_size * 20.5))
+            screen.blit(text_ready, text_rect)
+
     player.draw(screen)
-    
-    for ghost in ghosts:
-        ghost.draw(screen)
 
 
 def draw_board(screen, board):

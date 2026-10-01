@@ -64,11 +64,18 @@ class Player:
         self.speed = pixel_size
         self.is_alive = True
         
+        self.is_dying = False
+        
         # animation
         self.body = spritesheet("assets/sprites/player/pacman_move.png", 1, 4, 14, 14)
         self.animation_frame = 0
         self.animation_delay = 5
         self.animation_delay_count = 0
+        
+        self.body_die = spritesheet("assets/sprites/player/pacman_die.png", 3, 4, 15, 16)
+        self.animation_die_frame = 0
+        self.animation_die_delay = 8
+        self.animation_die_delay_count = 0
 
         self.life_count = 2
         self.score = 0
@@ -77,23 +84,30 @@ class Player:
     ### Methods ###
     def draw(self, screen):
         offset = 3 * self.pixel_size
-
         draw_position = (
             self.x - offset,
             self.y + self.game_area - offset,
         )
-
-        # Draw body unless the ghost is dead
-        body = pygame.transform.scale_by(
-            self.body[self.animation_frame],
-            self.pixel_size,
-        )
-        body = pygame.transform.rotate(body, ROTATIONS[self.last_direction])
+        
+        if not self.is_dying:
+    
+            # Draw body unless the ghost is dead
+            body = pygame.transform.scale_by(
+                self.body[self.animation_frame],
+                self.pixel_size,
+            )
+            body = pygame.transform.rotate(body, ROTATIONS[self.last_direction])
+            
+            if self.direction is not None:
+                self.update_animation()
+        else:
+            body = pygame.transform.scale_by(
+                self.body_die[self.animation_die_frame],
+                self.pixel_size,
+            )
+            self.update_death_animation()
         
         screen.blit(body, draw_position)
-        
-        if self.direction is not None:
-            self.update_animation()
 
 
     def update_animation(self):
@@ -106,6 +120,21 @@ class Player:
 
         self.animation_delay_count = 0
         self.animation_frame = (self.animation_frame + 1) % len(self.body)
+
+
+    def update_death_animation(self):
+        self.animation_die_delay_count += 1
+
+        if self.animation_die_delay_count < self.animation_die_delay:
+            return
+
+        if self.animation_die_frame >= len(self.body_die)-1:
+            self.is_dying = False
+            self.is_alive = False
+            return
+        
+        self.animation_die_delay_count = 0
+        self.animation_die_frame += 1
 
 
     def move(self, board, ghosts):
@@ -191,7 +220,7 @@ class Player:
                         ghost.state = "dead"
                         self.score += ghost_points
                     else:
-                        self.is_alive = False
+                        self.is_dying = True
 
 
     def respawn_player(self):

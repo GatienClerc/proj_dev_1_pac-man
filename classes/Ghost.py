@@ -202,6 +202,8 @@ class Ghost:
 
         self.color = (
             color_scared[self.animation_frame]
+            if self.scared_timer > self.scared_time-2*60 and self.state == SCARED
+            else color_scared[0]
             if self.state == SCARED
             else self.main_color
         )
