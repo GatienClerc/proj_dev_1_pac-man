@@ -2,10 +2,10 @@
 # Program name:         setting.py
 # Description:          the setting screen
 # Author:               Gatien Clerc
-# Creation date:        08.09.2026
+# Creation date:        01.10.2026
 # Modified by:          -
 # Modification date:    -
-# Version:              0.3
+# Version:              0.6
 #***********************************************************************************************************************
 import pygame
 from utils.save import save

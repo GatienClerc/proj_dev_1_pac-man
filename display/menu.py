@@ -2,10 +2,10 @@
 # Program name:         menu.py
 # Description:          the menu screen
 # Author:               Gatien Clerc
-# Creation date:        08.09.2026
+# Creation date:        29.10.2026
 # Modified by:          -
 # Modification date:    -
-# Version:              0.6
+# Version:              0.8
 #***********************************************************************************************************************
 import pygame
 
