@@ -2,10 +2,10 @@
 # Program name:         setting.py
 # Description:          the setting screen
 # Author:               Gatien Clerc
-# Creation date:        08.09.2026
+# Creation date:        01.10.2026
 # Modified by:          -
 # Modification date:    -
-# Version:              0.3
+# Version:              0.6
 #***********************************************************************************************************************
 import pygame
 from utils.save import save
@@ -16,6 +16,7 @@ def setting(screen, width, height, font, pixel_size, volume):
     dragging = False
 
     title_y = height // 8
+    volume_y = height // 5
     slider_width = width // 2
     slider_x = (width - slider_width) // 2
     slider_y = height // 4
@@ -24,10 +25,9 @@ def setting(screen, width, height, font, pixel_size, volume):
     btn_minus = pygame.Rect(width // 2 - btn_size * 2, height // 2, btn_size, btn_size)
     btn_plus = pygame.Rect( width // 2 + btn_size, height // 2, btn_size, btn_size)
 
-    btn_apply_width = width // 3
-    btn_apply_height = height // 12
 
-    btn_apply = pygame.Rect((width - btn_apply_width) // 2, height * 3 // 4, btn_apply_width, btn_apply_height)
+
+    btn_apply = pygame.Rect((width - width // 3) // 2, height * 3 // 4, width // 3, height // 12)
 
     while True:
 
@@ -38,15 +38,15 @@ def setting(screen, width, height, font, pixel_size, volume):
         screen.blit(title, title.get_rect(center=(width // 2, title_y)))
 
         # Volume
-        volume_text = font.render(f"Volume : {int(volume)}%", True, (255, 255, 255))
-        screen.blit(volume_text, (slider_x, slider_y - btn_size))
+        volume_text = font.render(f"Volume (WIP) : {int(volume)}%", True, (255, 255, 255))
+        screen.blit(volume_text, volume_text.get_rect(center=(width // 2, volume_y)))
 
 
         pygame.draw.rect(screen,(255, 255, 255),(slider_x, slider_y, slider_width, btn_size // 5))
 
         handle_x = slider_x + (volume / 100) * slider_width
 
-        pygame.draw.circle( screen,(255, 255, 0),(int(handle_x), slider_y + btn_size // 10),btn_size // 4)
+        pygame.draw.circle( screen,(128, 128, 128),(int(handle_x), slider_y + btn_size // 10),btn_size // 4)
 
         # Pixel Size
         pixel_label = font.render("Pixel Size :", True, (255, 255, 255))
@@ -78,7 +78,7 @@ def setting(screen, width, height, font, pixel_size, volume):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    return "menu", pixel_size
+                    return "menu", pixel_size, volume
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn_apply.collidepoint(event.pos):
@@ -98,7 +98,7 @@ def setting(screen, width, height, font, pixel_size, volume):
                     pixel_size = min(5, pixel_size + 1)
 
                 if abs(event.pos[0] - handle_x) < 15:
-                    dragging = True
+                    dragging = False
 
             if event.type == pygame.MOUSEBUTTONUP:
                 dragging = False
