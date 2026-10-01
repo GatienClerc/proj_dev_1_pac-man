@@ -67,7 +67,6 @@ while state != "quit":
 
     elif state == "game":
         board, player, ghosts = game_innit(GAME, TILE_SIZE,PIXEL_SIZE)
-
         running_game = True
 
         while running_game:
@@ -92,8 +91,6 @@ while state != "quit":
                 running_game = False
                 score = player.score
 
-            
-
             screen.fill((0, 0, 0))
             game_screen(screen, board, font, TILE_SIZE, player, ghosts)
             pygame.display.flip()
@@ -107,8 +104,6 @@ while state != "quit":
                 else:
                     player.life_count -= 1
                     reset_entities(player, ghosts)
-
-
             
             clock.tick(60)
 pygame.quit()

@@ -78,7 +78,7 @@ def setting(screen, width, height, font, pixel_size, volume):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    return "menu", pixel_size
+                    return "menu", pixel_size, volume
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btn_apply.collidepoint(event.pos):
