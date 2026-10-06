@@ -129,6 +129,7 @@ class Player:
             return
 
         if self.animation_die_frame >= len(self.body_die)-1:
+            self.animation_die_frame = 0
             self.is_dying = False
             self.is_alive = False
             return
@@ -212,10 +213,23 @@ class Player:
                 ghost.scared_timer = 0
                 ghost.direction = (ghost.direction + 2) % 4
 
-
     def check_ghosts(self, ghosts):
+        player_rect = pygame.Rect(
+            self.x - self.pixel_size,
+            self.y + self.game_area - self.pixel_size,
+            self.pixel_size * 2,
+            self.pixel_size * 2
+        )
+
         for ghost in ghosts:
-            if ghost.grid_x == self.grid_x and ghost.grid_y == self.grid_y:
+            ghost_rect = pygame.Rect(
+                ghost.x - self.pixel_size,
+                ghost.y + self.game_area - self.pixel_size,
+                self.pixel_size * 2,
+                self.pixel_size * 2
+            )
+
+            if player_rect.colliderect(ghost_rect):
                 if ghost.state != "dead":
                     if ghost.state == "scared":
                         ghost.state = "dead"
