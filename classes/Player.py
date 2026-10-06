@@ -217,16 +217,16 @@ class Player:
         player_rect = pygame.Rect(
             self.x - self.pixel_size,
             self.y + self.game_area - self.pixel_size,
-            self.pixel_size * 2,
-            self.pixel_size * 2
+            self.pixel_size * 8,
+            self.pixel_size * 8
         )
 
         for ghost in ghosts:
             ghost_rect = pygame.Rect(
                 ghost.x - self.pixel_size,
                 ghost.y + self.game_area - self.pixel_size,
-                self.pixel_size * 2,
-                self.pixel_size * 2
+                self.pixel_size * 8,
+                self.pixel_size * 8
             )
 
             if player_rect.colliderect(ghost_rect):
