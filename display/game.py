@@ -20,6 +20,13 @@ ready_time = 2*60
 ready_timer = 0
 
 def game_innit(game_area, tile_size, pixel_size):
+    global global_ghosts_cycle, global_ghosts_timer, global_ghosts_state, ready_timer
+    #reset for game restart
+    global_ghosts_cycle = 0
+    global_ghosts_timer = 0
+    global_ghosts_state = "scatter"
+    ready_timer = 0
+    
     board, player, ghosts = read_gamedata(tile_size, game_area, pixel_size)
     set_wall_image(board, pixel_size)
 
